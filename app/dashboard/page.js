@@ -39,3 +39,8 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+import SignOutButton from '@/app/components/SignOutButton'
+
+// Inside your JSX:
+<SignOutButton />

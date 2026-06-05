@@ -1,6 +1,9 @@
+
+export const runtime = 'nodejs'
 import { createClient } from '@/lib/supabase'
 import { analyzeCropImage } from '@/lib/gemini'
 import sharp from 'sharp'
+
 
 export async function POST(request) {
   try {
