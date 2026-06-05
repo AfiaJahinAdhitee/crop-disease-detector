@@ -35,6 +35,7 @@ CREATE TRIGGER on_auth_user_created
   is_healthy   BOOLEAN DEFAULT false,
   image_url    TEXT,                   -- Supabase Storage path
   created_at   TIMESTAMPTZ DEFAULT now() NOT NULL
+  raw_ai_response TEXT,
 );
 
 -- Indexes for Person 3's aggregation queries

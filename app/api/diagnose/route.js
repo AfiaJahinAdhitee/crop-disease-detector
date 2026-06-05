@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase'
 import { analyzeCropImage } from '@/lib/gemini'
+import sharp from 'sharp'
 
 export async function POST(request) {
   try {
@@ -22,11 +23,15 @@ export async function POST(request) {
       )
     }
 
-    // Convert image to base64 for Gemini
+    // Read, compress, then convert to base64
     const imageBytes = await imageFile.arrayBuffer()
-    const base64Image = Buffer.from(imageBytes).toString('base64')
+    const compressed = await sharp(Buffer.from(imageBytes))
+      .resize({ width: 1200, withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer()
+    const base64Image = compressed.toString('base64')
 
-    const diagnosis = await analyzeCropImage(base64Image, imageFile.type, cropType)
+    const diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType)
 
     // Save to Supabase if user is logged in
     const supabase = createClient()
