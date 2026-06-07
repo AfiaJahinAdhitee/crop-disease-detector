@@ -23,6 +23,7 @@ export default function UploadPage() {
   const [region, setRegion] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [secondOpinion, setSecondOpinion] = useState(null)
   const [error, setError] = useState(null)
 
   function handleImageChange(e) {
@@ -31,6 +32,7 @@ export default function UploadPage() {
     setImage(file)
     setPreview(URL.createObjectURL(file))
     setResult(null)
+    setSecondOpinion(null)
     setError(null)
   }
 
@@ -41,6 +43,7 @@ export default function UploadPage() {
     setImage(file)
     setPreview(URL.createObjectURL(file))
     setResult(null)
+    setSecondOpinion(null)
     setError(null)
   }
 
@@ -48,6 +51,7 @@ export default function UploadPage() {
     setImage(null)
     setPreview(null)
     setResult(null)
+    setSecondOpinion(null)
     setError(null)
   }
 
@@ -75,6 +79,7 @@ export default function UploadPage() {
 
       if (!data.success) throw new Error(data.error || 'Diagnosis failed')
       setResult(data.diagnosis)
+      setSecondOpinion(data.secondOpinion || null)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -195,11 +200,11 @@ export default function UploadPage() {
           )}
         </button>
 
-        {/* Result */}
+        {/* Primary Result */}
         {result && (
           <div className="border border-gray-800 rounded-2xl overflow-hidden bg-gray-900">
 
-            {/* Header — icon changes based on disease_detected */}
+            {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
                 {result.disease_detected ? (
@@ -228,7 +233,7 @@ export default function UploadPage() {
               <p className="text-xs text-gray-400 mt-1">{Math.round(result.confidence_score * 100)}%</p>
             </div>
 
-            {/* Description — new field from Python backend */}
+            {/* Description */}
             {result.description && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">About this diagnosis</p>
@@ -244,7 +249,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Treatment — only show if disease detected */}
+            {/* Treatment */}
             {result.disease_detected && result.treatment && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Treatment</p>
@@ -252,7 +257,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Remedies — new field from Python backend */}
+            {/* Remedies */}
             {result.disease_detected && result.remedies?.length > 0 && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-2">Step-by-step remedies</p>
@@ -272,14 +277,128 @@ export default function UploadPage() {
 
             {/* Prevention */}
             {result.prevention && (
-              <div className="px-5 py-4">
+              <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Prevention</p>
                 <p className="text-sm text-gray-300">{result.prevention}</p>
               </div>
             )}
 
+            {/* Source indicator */}
+            <div className="px-5 py-3 flex items-center gap-2">
+              {result.source === "custom_model" ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+                  <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে কাস্টম ট্রেইনড মডেল দ্বারা</p>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                  <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে Gemini AI দ্বারা</p>
+                </>
+              )}
+            </div>
+
           </div>
         )}
+
+        {/* Second Opinion from Gemini */}
+        {secondOpinion && (
+          <div className="border border-yellow-800/50 rounded-2xl overflow-hidden bg-gray-900">
+
+            {/* Warning header */}
+            <div className="px-5 py-3 bg-yellow-900/20 border-b border-yellow-800/50 flex items-center gap-2">
+              <AlertTriangle size={16} className="text-yellow-400" />
+              <p className="text-sm font-semibold text-yellow-400">Gemini AI has a different opinion</p>
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+              <div className="flex items-center gap-2">
+                {secondOpinion.disease_detected ? (
+                  <AlertTriangle size={18} className="text-yellow-400" />
+                ) : (
+                  <CheckCircle size={18} className="text-green-400" />
+                )}
+                <span className="font-semibold">{secondOpinion.disease_name}</span>
+              </div>
+              {secondOpinion.severity !== 'none' && (
+                <span className={`text-xs font-medium px-3 py-1 rounded-full border ${SEVERITY_COLORS[secondOpinion.severity] || SEVERITY_COLORS.low}`}>
+                  {secondOpinion.severity} severity
+                </span>
+              )}
+            </div>
+
+            {/* Confidence */}
+            <div className="px-5 py-4 border-b border-gray-800">
+              <p className="text-xs text-gray-500 mb-2">Confidence</p>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div
+                  className="bg-blue-400 h-2 rounded-full transition-all"
+                  style={{ width: `${Math.round(secondOpinion.confidence_score * 100)}%` }}
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{Math.round(secondOpinion.confidence_score * 100)}%</p>
+            </div>
+
+            {/* Description */}
+            {secondOpinion.description && (
+              <div className="px-5 py-4 border-b border-gray-800">
+                <p className="text-xs text-gray-500 mb-1">About this diagnosis</p>
+                <p className="text-sm text-gray-300">{secondOpinion.description}</p>
+              </div>
+            )}
+
+            {/* Symptoms */}
+            {secondOpinion.symptoms && (
+              <div className="px-5 py-4 border-b border-gray-800">
+                <p className="text-xs text-gray-500 mb-1">What we see</p>
+                <p className="text-sm text-gray-300">{secondOpinion.symptoms}</p>
+              </div>
+            )}
+
+            {/* Treatment */}
+            {secondOpinion.disease_detected && secondOpinion.treatment && (
+              <div className="px-5 py-4 border-b border-gray-800">
+                <p className="text-xs text-gray-500 mb-1">Treatment</p>
+                <p className="text-sm text-gray-300">{secondOpinion.treatment}</p>
+              </div>
+            )}
+
+            {/* Remedies */}
+            {secondOpinion.disease_detected && secondOpinion.remedies?.length > 0 && (
+              <div className="px-5 py-4 border-b border-gray-800">
+                <p className="text-xs text-gray-500 mb-2">Step-by-step remedies</p>
+                <ol className="space-y-1.5 list-none">
+                  {secondOpinion.remedies.map((step, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                      <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-gray-800 text-gray-400
+                                       text-xs flex items-center justify-center font-medium">
+                        {i + 1}
+                      </span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Prevention */}
+            {secondOpinion.prevention && (
+              <div className="px-5 py-4 border-b border-gray-800">
+                <p className="text-xs text-gray-500 mb-1">Prevention</p>
+                <p className="text-sm text-gray-300">{secondOpinion.prevention}</p>
+              </div>
+            )}
+
+            {/* Source indicator */}
+            <div className="px-5 py-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+              <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে Gemini AI দ্বারা</p>
+            </div>
+
+          </div>
+        )}
+
       </div>
     </div>
   )

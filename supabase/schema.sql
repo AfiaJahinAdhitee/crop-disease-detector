@@ -34,8 +34,9 @@ CREATE TRIGGER on_auth_user_created
   prevention   TEXT,                   -- Gemini response (Bangla)
   is_healthy   BOOLEAN DEFAULT false,
   image_url    TEXT,                   -- Supabase Storage path
-  created_at   TIMESTAMPTZ DEFAULT now() NOT NULL
-  raw_ai_response TEXT,
+  created_at   TIMESTAMPTZ DEFAULT now() NOT NULL,
+  raw_ai_response   TEXT,
+  source            TEXT DEFAULT 'gemini'
 );
 
 -- Indexes for Person 3's aggregation queries
