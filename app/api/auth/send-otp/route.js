@@ -38,9 +38,9 @@ export async function POST(request) {
 
     // Send OTP via Gmail SMTP
     await transporter.sendMail({
-      from: `"CROP2" <${process.env.GMAIL_USER}>`,
+      from: `"CROP-Doctor" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: `${otp} is your CROP2 sign-in code`,
+      subject: `${otp} is your CROP-Doctor sign-in code`,
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0a1a0d; border-radius: 16px; border: 1px solid #1a3a1a;">
           <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: #4ade80; text-transform: uppercase; margin-bottom: 24px;">CROP2</div>
