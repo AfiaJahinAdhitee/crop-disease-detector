@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X } from 'lucide-react'
+import { useState, useRef } from 'react' // Added useRef to manage the recognition instance
+import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X, Mic, Square } from 'lucide-react' // Added Mic and Square icons
 
 const CROP_TYPES = [
   'Tomato', 'Potato', 'Corn', 'Rice', 'Wheat',
@@ -21,11 +21,77 @@ export default function UploadPage() {
   const [preview, setPreview] = useState(null)
   const [cropType, setCropType] = useState('')
   const [region, setRegion] = useState('')
-  const [userDescription, setUserDescription] = useState('') // <-- Track optional input text
+  const [userDescription, setUserDescription] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [secondOpinion, setSecondOpinion] = useState(null)
   const [error, setError] = useState(null)
+
+  // --- Voice Recognition Setup States ---
+  const [isListening, setIsListening] = useState(false)
+  const recognitionRef = useRef(null)
+
+  function startSpeechRecognition() {
+    // Check browser support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setError('Voice input is not supported in your browser. Please try Google Chrome or Microsoft Edge.')
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognitionRef.current = recognition
+    
+    // Configurations
+    recognition.continuous = false // Stops automatically when user stops talking
+    recognition.interimResults = false // Only definitive final text translations
+    
+    /* Language Strategy:
+      'bn-BD' captures Bangla speech natively. 
+      'en-US' captures English text or Banglish spoken contextually.
+      For the best multi-intent experience in South Asian regions, 'bn-BD' works flawlessly 
+      for direct Bangla, while 'en-US' or leaving it to browser default captures english text well.
+    */
+    recognition.lang = 'bn-BD' // Set to 'en-US' if you primarily want English/Banglish text processing
+
+    recognition.onstart = () => {
+      setIsListening(true)
+    }
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error', event.error)
+      setError(`Voice recognition issue: ${event.error}`)
+      setIsListening(false)
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+    }
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript
+      // Append the spoken text seamlessly into the current description text
+      setUserDescription((prev) => (prev ? `${prev} ${transcript}` : transcript))
+    }
+
+    recognition.start()
+  }
+
+  function stopSpeechRecognition() {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+      setIsListening(false)
+    }
+  }
+
+  function toggleListening() {
+    if (isListening) {
+      stopSpeechRecognition()
+    } else {
+      startSpeechRecognition()
+    }
+  }
+  // --------------------------------------
 
   function handleImageChange(e) {
     const file = e.target.files[0]
@@ -53,10 +119,11 @@ export default function UploadPage() {
     setPreview(null)
     setCropType('')
     setRegion('')
-    setUserDescription('') // <-- Clear input
+    setUserDescription('')
     setResult(null)
     setSecondOpinion(null)
     setError(null)
+    stopSpeechRecognition()
   }
 
   async function handleSubmit() {
@@ -73,7 +140,7 @@ export default function UploadPage() {
       formData.append('image', image)
       formData.append('cropType', cropType)
       formData.append('region', region)
-      formData.append('userDescription', userDescription) // <-- Appended optional input field
+      formData.append('userDescription', userDescription)
 
       const res = await fetch('/api/diagnose', {
         method: 'POST',
@@ -177,17 +244,40 @@ export default function UploadPage() {
           />
         </div>
 
-        {/* Optional Description Textarea Element */}
+        {/* Description Textarea Element with Integrated Microphone Button */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-300">Description / Symptoms observed (Optional)</label>
-          <textarea
-            rows={3}
-            placeholder="Describe what you see (e.g., yellow spots spreading from lower edges, curling leaves...)"
-            value={userDescription}
-            onChange={(e) => setUserDescription(e.target.value)}
-            className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm
-                       text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-none"
-          />
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-300">Description / Symptoms observed (Optional)</label>
+            {isListening && (
+              <span className="text-xs text-red-400 flex items-center gap-1.5 animate-pulse font-medium">
+                <span className="w-2 h-2 rounded-full bg-red-500 inline-block"></span>
+                Listening... Speak now
+              </span>
+            )}
+          </div>
+          <div className="relative bg-gray-900 border border-gray-700 rounded-xl overflow-hidden focus-within:border-green-500 transition-colors">
+            <textarea
+              rows={3}
+              placeholder="Describe symptoms or tap the mic to speak (e.g., 'pata holud hoye jachhe' or 'leaves curling')"
+              value={userDescription}
+              onChange={(e) => setUserDescription(e.target.value)}
+              className="w-full bg-transparent border-none rounded-xl pl-4 pr-12 py-3 text-sm
+                         text-white placeholder-gray-500 focus:outline-none resize-none"
+            />
+            {/* Action Mic Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleListening}
+              className={`absolute right-3 bottom-3 p-2 rounded-lg transition-all flex items-center justify-center
+                ${isListening 
+                  ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30 ring-1 ring-red-500/40' 
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                }`}
+              title={isListening ? "Stop listening" : "Start voice typing"}
+            >
+              {isListening ? <Square size={16} fill="currentColor" /> : <Mic size={16} />}
+            </button>
+          </div>
         </div>
 
         {/* Error Notification */}
@@ -218,10 +308,9 @@ export default function UploadPage() {
           )}
         </button>
 
-        {/* Primary Diagnosis Rendering Interface */}
+        {/* Diagnosis Results Rendering Components remain the same below... */}
         {result && (
           <div className="border border-gray-800 rounded-2xl overflow-hidden bg-gray-900">
-            {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
                 {result.disease_detected ? (
@@ -238,7 +327,6 @@ export default function UploadPage() {
               )}
             </div>
 
-            {/* Confidence metric indicator */}
             <div className="px-5 py-4 border-b border-gray-800">
               <p className="text-xs text-gray-500 mb-2">Confidence</p>
               <div className="w-full bg-gray-800 rounded-full h-2">
@@ -250,7 +338,6 @@ export default function UploadPage() {
               <p className="text-xs text-gray-400 mt-1">{Math.round(result.confidence_score * 100)}%</p>
             </div>
 
-            {/* Description details content */}
             {result.description && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">About this diagnosis</p>
@@ -258,7 +345,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Visual Symptoms description detail */}
             {result.symptoms && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">What we see</p>
@@ -266,7 +352,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Prescribed treatment content container */}
             {result.disease_detected && result.treatment && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Treatment</p>
@@ -274,7 +359,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Actionable Remedies */}
             {result.disease_detected && result.remedies?.length > 0 && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-2">Step-by-step remedies</p>
@@ -292,7 +376,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Preventive measures layout block */}
             {result.prevention && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Prevention</p>
@@ -300,7 +383,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* AI Source label indicators */}
             <div className="px-5 py-3 flex items-center gap-2">
               {result.source === "custom_model" ? (
                 <>
@@ -317,7 +399,6 @@ export default function UploadPage() {
           </div>
         )}
 
-        {/* Alternate Gemini Second Opinion Block layout elements */}
         {secondOpinion && (
           <div className="border border-yellow-800/50 rounded-2xl overflow-hidden bg-gray-900">
             <div className="px-5 py-3 bg-yellow-900/20 border-b border-yellow-800/50 flex items-center gap-2">
