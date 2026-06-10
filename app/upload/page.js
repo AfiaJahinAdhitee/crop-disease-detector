@@ -21,6 +21,7 @@ export default function UploadPage() {
   const [preview, setPreview] = useState(null)
   const [cropType, setCropType] = useState('')
   const [region, setRegion] = useState('')
+  const [userDescription, setUserDescription] = useState('') // <-- Track optional input text
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [secondOpinion, setSecondOpinion] = useState(null)
@@ -50,6 +51,9 @@ export default function UploadPage() {
   function clearImage() {
     setImage(null)
     setPreview(null)
+    setCropType('')
+    setRegion('')
+    setUserDescription('') // <-- Clear input
     setResult(null)
     setSecondOpinion(null)
     setError(null)
@@ -69,6 +73,7 @@ export default function UploadPage() {
       formData.append('image', image)
       formData.append('cropType', cropType)
       formData.append('region', region)
+      formData.append('userDescription', userDescription) // <-- Appended optional input field
 
       const res = await fetch('/api/diagnose', {
         method: 'POST',
@@ -103,7 +108,7 @@ export default function UploadPage() {
           </p>
         </div>
 
-        {/* Image Upload */}
+        {/* Image Upload Component */}
         <div
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
@@ -139,7 +144,7 @@ export default function UploadPage() {
           )}
         </div>
 
-        {/* Crop Type */}
+        {/* Crop Type Selection */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-300">Crop Type *</label>
           <div className="flex flex-wrap gap-2">
@@ -172,7 +177,20 @@ export default function UploadPage() {
           />
         </div>
 
-        {/* Error */}
+        {/* Optional Description Textarea Element */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-300">Description / Symptoms observed (Optional)</label>
+          <textarea
+            rows={3}
+            placeholder="Describe what you see (e.g., yellow spots spreading from lower edges, curling leaves...)"
+            value={userDescription}
+            onChange={(e) => setUserDescription(e.target.value)}
+            className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm
+                       text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-none"
+          />
+        </div>
+
+        {/* Error Notification */}
         {error && (
           <div className="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3 text-sm">
             <AlertCircle size={16} />
@@ -180,7 +198,7 @@ export default function UploadPage() {
           </div>
         )}
 
-        {/* Submit */}
+        {/* Submit Actions */}
         <button
           onClick={handleSubmit}
           disabled={loading || !image || !cropType}
@@ -200,10 +218,9 @@ export default function UploadPage() {
           )}
         </button>
 
-        {/* Primary Result */}
+        {/* Primary Diagnosis Rendering Interface */}
         {result && (
           <div className="border border-gray-800 rounded-2xl overflow-hidden bg-gray-900">
-
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
@@ -221,7 +238,7 @@ export default function UploadPage() {
               )}
             </div>
 
-            {/* Confidence */}
+            {/* Confidence metric indicator */}
             <div className="px-5 py-4 border-b border-gray-800">
               <p className="text-xs text-gray-500 mb-2">Confidence</p>
               <div className="w-full bg-gray-800 rounded-full h-2">
@@ -233,7 +250,7 @@ export default function UploadPage() {
               <p className="text-xs text-gray-400 mt-1">{Math.round(result.confidence_score * 100)}%</p>
             </div>
 
-            {/* Description */}
+            {/* Description details content */}
             {result.description && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">About this diagnosis</p>
@@ -241,7 +258,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Symptoms */}
+            {/* Visual Symptoms description detail */}
             {result.symptoms && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">What we see</p>
@@ -249,7 +266,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Treatment */}
+            {/* Prescribed treatment content container */}
             {result.disease_detected && result.treatment && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Treatment</p>
@@ -257,7 +274,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Remedies */}
+            {/* Actionable Remedies */}
             {result.disease_detected && result.remedies?.length > 0 && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-2">Step-by-step remedies</p>
@@ -275,7 +292,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Prevention */}
+            {/* Preventive measures layout block */}
             {result.prevention && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Prevention</p>
@@ -283,7 +300,7 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Source indicator */}
+            {/* AI Source label indicators */}
             <div className="px-5 py-3 flex items-center gap-2">
               {result.source === "custom_model" ? (
                 <>
@@ -297,21 +314,17 @@ export default function UploadPage() {
                 </>
               )}
             </div>
-
           </div>
         )}
 
-        {/* Second Opinion from Gemini */}
+        {/* Alternate Gemini Second Opinion Block layout elements */}
         {secondOpinion && (
           <div className="border border-yellow-800/50 rounded-2xl overflow-hidden bg-gray-900">
-
-            {/* Warning header */}
             <div className="px-5 py-3 bg-yellow-900/20 border-b border-yellow-800/50 flex items-center gap-2">
               <AlertTriangle size={16} className="text-yellow-400" />
               <p className="text-sm font-semibold text-yellow-400">Gemini AI has a different opinion</p>
             </div>
 
-            {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
                 {secondOpinion.disease_detected ? (
@@ -328,7 +341,6 @@ export default function UploadPage() {
               )}
             </div>
 
-            {/* Confidence */}
             <div className="px-5 py-4 border-b border-gray-800">
               <p className="text-xs text-gray-500 mb-2">Confidence</p>
               <div className="w-full bg-gray-800 rounded-full h-2">
@@ -340,7 +352,6 @@ export default function UploadPage() {
               <p className="text-xs text-gray-400 mt-1">{Math.round(secondOpinion.confidence_score * 100)}%</p>
             </div>
 
-            {/* Description */}
             {secondOpinion.description && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">About this diagnosis</p>
@@ -348,7 +359,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Symptoms */}
             {secondOpinion.symptoms && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">What we see</p>
@@ -356,7 +366,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Treatment */}
             {secondOpinion.disease_detected && secondOpinion.treatment && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Treatment</p>
@@ -364,7 +373,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Remedies */}
             {secondOpinion.disease_detected && secondOpinion.remedies?.length > 0 && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-2">Step-by-step remedies</p>
@@ -382,7 +390,6 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Prevention */}
             {secondOpinion.prevention && (
               <div className="px-5 py-4 border-b border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">Prevention</p>
@@ -390,15 +397,12 @@ export default function UploadPage() {
               </div>
             )}
 
-            {/* Source indicator */}
             <div className="px-5 py-3 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
               <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে Gemini AI দ্বারা</p>
             </div>
-
           </div>
         )}
-
       </div>
     </div>
   )
