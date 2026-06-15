@@ -13,6 +13,18 @@ export default function DashboardPage() {
   const [loadingChart, setLoadingChart] = useState(true);
   const [loadingRecent, setLoadingRecent] = useState(true);
 
+  const formatAndSetChartData = (data, cropFilter) => {
+    let filtered = data;
+    if (cropFilter !== 'all') {
+      filtered = data.filter(item => item.crop === cropFilter);
+    }
+    const formatted = filtered.map(item => ({
+      name: cropFilter === 'all' ? `${item.region} (${item.crop})` : item.region,
+      'আক্রান্তের সংখ্যা': item.count
+    }));
+    setChartData(formatted);
+  };
+
   useEffect(() => {
     // ১. চার্টের জন্য অ্যানালিটিক্স ডেটা আনা
     async function fetchAnalytics() {
@@ -44,18 +56,6 @@ export default function DashboardPage() {
     fetchAnalytics();
     fetchRecentActivity();
   }, []);
-
-  const formatAndSetChartData = (data, cropFilter) => {
-    let filtered = data;
-    if (cropFilter !== 'all') {
-      filtered = data.filter(item => item.crop === cropFilter);
-    }
-    const formatted = filtered.map(item => ({
-      name: cropFilter === 'all' ? `${item.region} (${item.crop})` : item.region,
-      'আক্রান্তের সংখ্যা': item.count
-    }));
-    setChartData(formatted);
-  };
 
   const handleCropChange = (e) => {
     const crop = e.target.value;

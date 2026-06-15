@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
-import { createHmac } from 'crypto'
+import {
+  createAuthPayload,
+  persistRefreshToken,
+  setAuthCookies,
+  signAccessToken,
+  signRefreshToken,
+} from '@/lib/auth-tokens'
 
 function getAdminClient() {
   return createClient(
@@ -10,29 +16,29 @@ function getAdminClient() {
   )
 }
 
-// Derive a stable email from phone (since Supabase auth uses email)
 function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, '')}@crop2.internal`
+  return `${String(phone).replace(/\D/g, '')}@crop2.internal`
 }
 
 export async function POST(request) {
   try {
-    const { phone, password } = await request.json()
+    const body = await request.json()
+    const phone = String(body.phone || '').trim()
+    const password = String(body.password || '').trim()
+
     if (!phone || !password) {
       return NextResponse.json({ error: 'Phone and password are required.' }, { status: 400 })
     }
 
     const email = phoneToEmail(phone)
 
-    // Check user exists
     const admin = getAdminClient()
     const { data: listData } = await admin.auth.admin.listUsers()
-    const user = listData?.users?.find(u => u.email === email)
+    const user = listData?.users?.find((entry) => entry.email === email)
     if (!user) {
       return NextResponse.json({ error: 'No account found with this phone number.' }, { status: 404 })
     }
 
-    // Sign in with email + password
     const anonClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -42,7 +48,23 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 })
     }
 
-    return NextResponse.json({ session: data.session })
+    const authPayload = createAuthPayload({
+      id: data.user.id,
+      email: data.user.email,
+      phone,
+    })
+    const accessToken = signAccessToken(authPayload)
+    const refreshToken = signRefreshToken(authPayload)
+
+    const response = NextResponse.json({
+      session: data.session,
+      user: { id: data.user.id, email: data.user.email, phone },
+      authenticated: true,
+    })
+
+    setAuthCookies(response, { accessToken, refreshToken })
+    persistRefreshToken(data.user.id, refreshToken)
+    return response
   } catch (err) {
     console.error('signin error:', err)
     return NextResponse.json({ error: 'Sign in failed.' }, { status: 500 })

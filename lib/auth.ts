@@ -1,6 +1,5 @@
 import { createClient } from './supabase'
 
-// Send OTP via Resend (our own API route)
 export async function sendOTP(email: string): Promise<void> {
   const res = await fetch('/api/auth/send-otp', {
     method: 'POST',
@@ -11,7 +10,6 @@ export async function sendOTP(email: string): Promise<void> {
   if (!res.ok) throw new Error(data.error || 'Failed to send code.')
 }
 
-// Verify OTP via our API route — returns session
 export async function verifyOTP(email: string, token: string): Promise<void> {
   const res = await fetch('/api/auth/verify-otp', {
     method: 'POST',
@@ -21,29 +19,43 @@ export async function verifyOTP(email: string, token: string): Promise<void> {
   const data = await res.json()
   if (!res.ok) throw new Error(data.error || 'Invalid code.')
 
-  // Set the session on the client-side Supabase instance
   if (data.session) {
     const supabase = createClient()
     await supabase.auth.setSession(data.session)
   }
 }
 
-// Sign out
 export async function signOut(): Promise<void> {
+  try {
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
+  } catch {
+    // Ignore logout failures and still clear Supabase state.
+  }
+
   const supabase = createClient()
   await supabase.auth.signOut()
 }
 
-// Get current user
 export async function getCurrentUser() {
-  const supabase = createClient()
-  const { data } = await supabase.auth.getUser()
-  return data.user
+  try {
+    const res = await fetch('/api/auth/me', {
+      method: 'GET',
+      credentials: 'include',
+    })
+    if (!res.ok) {
+      return null
+    }
+    const data = await res.json()
+    return data.user ?? null
+  } catch {
+    return null
+  }
 }
 
-// Get current session
 export async function getSession() {
-  const supabase = createClient()
-  const { data } = await supabase.auth.getSession()
-  return data.session
+  const user = await getCurrentUser()
+  return user ? { user } : null
 }

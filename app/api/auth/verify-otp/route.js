@@ -2,6 +2,13 @@ import { createHmac } from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import {
+  createAuthPayload,
+  persistRefreshToken,
+  setAuthCookies,
+  signAccessToken,
+  signRefreshToken,
+} from '@/lib/auth-tokens'
 
 function getAdminClient() {
   return createClient(
@@ -36,7 +43,6 @@ export async function POST(request) {
 
     const normalizedEmail = email.toLowerCase().trim()
 
-    // Read nonce from cookie
     const cookieStore = await cookies()
     const nonceCookie = cookieStore.get('otp_nonce')?.value
 
@@ -46,7 +52,6 @@ export async function POST(request) {
 
     const [cookieEmail, nonce, expires] = nonceCookie.split(':')
 
-    // Validate cookie belongs to this email and hasn't expired
     if (cookieEmail !== normalizedEmail) {
       return NextResponse.json({ error: 'Email mismatch. Please request a new code.' }, { status: 400 })
     }
@@ -54,18 +59,16 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Code expired. Please request a new one.' }, { status: 400 })
     }
 
-    // Verify the OTP against the nonce
     const expectedOTP = generateOTP(normalizedEmail, nonce)
     if (token !== expectedOTP) {
       return NextResponse.json({ error: 'Invalid or expired code.' }, { status: 400 })
     }
 
-    // OTP valid — create or sign in user via admin
     const admin = getAdminClient()
     const stablePassword = getStablePassword(normalizedEmail)
 
     const { data: listData } = await admin.auth.admin.listUsers()
-    const existingUser = listData?.users?.find(u => u.email === normalizedEmail)
+    const existingUser = listData?.users?.find((user) => user.email === normalizedEmail)
 
     if (!existingUser) {
       const { error: createError } = await admin.auth.admin.createUser({
@@ -86,11 +89,19 @@ export async function POST(request) {
     })
     if (sessionError) throw new Error(sessionError.message)
 
-    // Clear the nonce cookie after successful use (one-time use)
-    const response = NextResponse.json({ session: sessionData.session })
-    response.cookies.delete('otp_nonce')
-    return response
+    const authPayload = createAuthPayload({
+      id: sessionData.user.id,
+      email: sessionData.user.email,
+      phone: normalizedEmail,
+    })
+    const accessToken = signAccessToken(authPayload)
+    const refreshToken = signRefreshToken(authPayload)
 
+    const response = NextResponse.json({ session: sessionData.session, user: authPayload, authenticated: true })
+    response.cookies.delete('otp_nonce')
+    setAuthCookies(response, { accessToken, refreshToken })
+    persistRefreshToken(sessionData.user.id, refreshToken)
+    return response
   } catch (err) {
     console.error('verify-otp error:', err)
     return NextResponse.json({ error: err.message || 'Verification failed.' }, { status: 500 })

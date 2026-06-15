@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react' // Added useRef to manage the recognition instance
+import { useEffect, useState, useRef } from 'react' // Added useRef to manage the recognition instance
 import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X, Mic, Square } from 'lucide-react' // Added Mic and Square icons
 
 const CROP_TYPES = [

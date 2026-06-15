@@ -2,9 +2,16 @@ import { createHmac } from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import {
+  createAuthPayload,
+  persistRefreshToken,
+  setAuthCookies,
+  signAccessToken,
+  signRefreshToken,
+} from '@/lib/auth-tokens'
 
 function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, '')}@crop2.internal`
+  return `${String(phone).replace(/\D/g, '')}@crop2.internal`
 }
 
 function generateOTP(key, nonce) {
@@ -28,7 +35,6 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 })
     }
 
-    // Read and validate pending signup cookie
     const cookieStore = await cookies()
     const raw = cookieStore.get('signup_pending')?.value
     if (!raw) {
@@ -52,7 +58,6 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid or expired code.' }, { status: 400 })
     }
 
-    // Create user in Supabase auth (internal email + password)
     const internalEmail = phoneToEmail(phone)
     const admin = getAdminClient()
 
@@ -64,9 +69,7 @@ export async function POST(request) {
     })
     if (createError) throw new Error(createError.message)
 
-    // The on_auth_user_created trigger already inserted an empty profiles row.
-    // We update it with the full data. Small delay ensures the trigger has fired.
-    await new Promise(r => setTimeout(r, 300))
+    await new Promise((resolve) => setTimeout(resolve, 300))
 
     const { error: profileError } = await admin
       .from('profiles')
@@ -80,7 +83,6 @@ export async function POST(request) {
 
     if (profileError) {
       console.error('profile update error:', profileError)
-      // Fallback: insert in case trigger didn't fire
       await admin.from('profiles').insert({
         id: userData.user.id,
         full_name: name,
@@ -90,7 +92,6 @@ export async function POST(request) {
       })
     }
 
-    // Sign in to get a session
     const anonClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -101,8 +102,18 @@ export async function POST(request) {
     })
     if (sessionError) throw new Error(sessionError.message)
 
-    const response = NextResponse.json({ session: sessionData.session })
+    const authPayload = createAuthPayload({
+      id: sessionData.user.id,
+      email: sessionData.user.email,
+      phone,
+    })
+    const accessToken = signAccessToken(authPayload)
+    const refreshToken = signRefreshToken(authPayload)
+
+    const response = NextResponse.json({ session: sessionData.session, user: authPayload, authenticated: true })
     response.cookies.delete('signup_pending')
+    setAuthCookies(response, { accessToken, refreshToken })
+    persistRefreshToken(sessionData.user.id, refreshToken)
     return response
   } catch (err) {
     console.error('signup-verify error:', err)
