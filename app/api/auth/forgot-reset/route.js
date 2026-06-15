@@ -1,9 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import {
+  createAuthPayload,
+  persistRefreshToken,
+  setAuthCookies,
+  signAccessToken,
+  signRefreshToken,
+} from '@/lib/auth-tokens'
 
 function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, '')}@crop2.internal`
+  return `${String(phone).replace(/\D/g, '')}@crop2.internal`
 }
 
 function getAdminClient() {
@@ -24,7 +31,6 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Password must be at least 8 characters.' }, { status: 400 })
     }
 
-    // Verify the OTP-verified cookie
     const cookieStore = await cookies()
     const raw = cookieStore.get('forgot_verified')?.value
     if (!raw) {
@@ -43,25 +49,19 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Session expired. Please start over.' }, { status: 401 })
     }
 
-    // Find user by internal email
     const admin = getAdminClient()
     const internalEmail = phoneToEmail(phone)
     const { data: listData } = await admin.auth.admin.listUsers()
-    const user = listData?.users?.find(u => u.email === internalEmail)
+    const user = listData?.users?.find((entry) => entry.email === internalEmail)
     if (!user) {
       return NextResponse.json({ error: 'Account not found.' }, { status: 404 })
     }
 
-    // Update password
     const { error: updateError } = await admin.auth.admin.updateUserById(user.id, {
       password: newPassword,
     })
     if (updateError) throw new Error(updateError.message)
 
-    // Update email metadata in profiles if changed
-    await admin.from('profiles').update({ /* no email field in schema */ }).eq('id', user.id)
-
-    // Sign user in with new password
     const anonClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -72,8 +72,18 @@ export async function POST(request) {
     })
     if (sessionError) throw new Error(sessionError.message)
 
-    const response = NextResponse.json({ session: sessionData.session })
+    const authPayload = createAuthPayload({
+      id: sessionData.user.id,
+      email: sessionData.user.email,
+      phone,
+    })
+    const accessToken = signAccessToken(authPayload)
+    const refreshToken = signRefreshToken(authPayload)
+
+    const response = NextResponse.json({ session: sessionData.session, user: authPayload, authenticated: true })
     response.cookies.delete('forgot_verified')
+    setAuthCookies(response, { accessToken, refreshToken })
+    persistRefreshToken(sessionData.user.id, refreshToken)
     return response
   } catch (err) {
     console.error('forgot-reset error:', err)
