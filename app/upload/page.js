@@ -9,6 +9,48 @@ const CROP_TYPES = [
   'Apple', 'Grape', 'Pepper', 'Strawberry', 'Other'
 ]
 
+const BANGLADESH_DISTRICTS = [
+  'Bagerhat', 'Bandarban', 'Barguna', 'Barishal', 'Bhola',
+  'Bogura', 'Brahmanbaria', 'Chandpur', 'Chapai Nawabganj', 'Chattogram',
+  'Chuadanga', "Cox's Bazar", 'Cumilla', 'Dhaka', 'Dinajpur',
+  'Faridpur', 'Feni', 'Gaibandha', 'Gazipur', 'Gopalganj',
+  'Habiganj', 'Jamalpur', 'Jessore', 'Jhalokati', 'Jhenaidah',
+  'Joypurhat', 'Khagrachhari', 'Khulna', 'Kishoreganj', 'Kurigram',
+  'Kushtia', 'Lakshmipur', 'Lalmonirhat', 'Madaripur', 'Magura',
+  'Manikganj', 'Meherpur', 'Moulvibazar', 'Munshiganj', 'Mymensingh',
+  'Naogaon', 'Narail', 'Narayanganj', 'Narsingdi', 'Natore',
+  'Netrokona', 'Nilphamari', 'Noakhali', 'Pabna', 'Panchagarh',
+  'Patuakhali', 'Pirojpur', 'Rajbari', 'Rajshahi', 'Rangamati',
+  'Rangpur', 'Satkhira', 'Shariatpur', 'Sherpur', 'Sirajganj',
+  'Sunamganj', 'Sylhet', 'Tangail', 'Thakurgaon'
+]
+
+const BANGLA_HINTS = {
+  'রাজশাহী': 'Rajshahi', 'রাজবাড়ী': 'Rajbari', 'ঢাকা': 'Dhaka',
+  'চট্টগ্রাম': 'Chattogram', 'খুলনা': 'Khulna', 'সিলেট': 'Sylhet',
+  'রংপুর': 'Rangpur', 'ময়মনসিংহ': 'Mymensingh', 'বরিশাল': 'Barishal',
+  'কুমিল্লা': 'Cumilla', 'নারায়ণগঞ্জ': 'Narayanganj', 'গাজীপুর': 'Gazipur',
+  'বগুড়া': 'Bogura', 'দিনাজপুর': 'Dinajpur', 'পাবনা': 'Pabna',
+  'টাঙ্গাইল': 'Tangail', 'যশোর': 'Jessore', 'ফরিদপুর': 'Faridpur',
+  'নোয়াখালী': 'Noakhali', 'কিশোরগঞ্জ': 'Kishoreganj',
+  'ব্রাহ্মণবাড়িয়া': 'Brahmanbaria', 'জামালপুর': 'Jamalpur',
+  'নেত্রকোণা': 'Netrokona', 'শেরপুর': 'Sherpur', 'মানিকগঞ্জ': 'Manikganj',
+  'মুন্সিগঞ্জ': 'Munshiganj', 'নরসিংদী': 'Narsingdi', 'গোপালগঞ্জ': 'Gopalganj',
+  'মাদারীপুর': 'Madaripur', 'শরীয়তপুর': 'Shariatpur', 'ঝালকাঠি': 'Jhalokati',
+  'পটুয়াখালী': 'Patuakhali', 'ভোলা': 'Bhola', 'পিরোজপুর': 'Pirojpur',
+  'বরগুনা': 'Barguna', 'বাগেরহাট': 'Bagerhat', 'সাতক্ষীরা': 'Satkhira',
+  'নড়াইল': 'Narail', 'মাগুরা': 'Magura', 'ঝিনাইদহ': 'Jhenaidah',
+  'মেহেরপুর': 'Meherpur', 'চুয়াডাঙ্গা': 'Chuadanga', 'কুষ্টিয়া': 'Kushtia',
+  'নাটোর': 'Natore', 'সিরাজগঞ্জ': 'Sirajganj', 'নওগাঁ': 'Naogaon',
+  'চাঁপাইনবাবগঞ্জ': 'Chapai Nawabganj', 'জয়পুরহাট': 'Joypurhat',
+  'গাইবান্ধা': 'Gaibandha', 'কুড়িগ্রাম': 'Kurigram', 'লালমনিরহাট': 'Lalmonirhat',
+  'নীলফামারী': 'Nilphamari', 'পঞ্চগড়': 'Panchagarh', 'ঠাকুরগাঁও': 'Thakurgaon',
+  'সুনামগঞ্জ': 'Sunamganj', 'মৌলভীবাজার': 'Moulvibazar', 'হবিগঞ্জ': 'Habiganj',
+  'খাগড়াছড়ি': 'Khagrachhari', 'রাঙামাটি': 'Rangamati', 'বান্দরবান': 'Bandarban',
+  'কক্সবাজার': "Cox's Bazar", 'ফেনী': 'Feni', 'লক্ষ্মীপুর': 'Lakshmipur',
+  'চাঁদপুর': 'Chandpur',
+}
+
 const SEVERITY_COLORS = {
   none: 'bg-green-100 text-green-800 border-green-200',
   low: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -94,6 +136,18 @@ const PART_META = {
   },
 }
 
+function levenshtein(a, b) {
+  const dp = Array.from({ length: a.length + 1 }, (_, i) =>
+    Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  )
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+  return dp[a.length][b.length]
+}
+
 function UploadPageInner() {
   const searchParams = useSearchParams()
   const plantPart = searchParams.get('part') || 'leaf'
@@ -109,7 +163,72 @@ function UploadPageInner() {
   const [secondOpinion, setSecondOpinion] = useState(null)
   const [error, setError] = useState(null)
   const [isListening, setIsListening] = useState(false)
+  const [regionSuggestions, setRegionSuggestions] = useState([])
   const recognitionRef = useRef(null)
+  const regionRecognitionRef = useRef(null)
+  const [isRegionListening, setIsRegionListening] = useState(false)
+  const regionBorderRef = useRef(null)
+
+  useEffect(() => {
+    const input = region.trim()
+    if (!input) { setRegionSuggestions([]); return }
+
+    // Detect if input contains Bangla characters
+    const isBangla = /[\u0980-\u09FF]/.test(input)
+
+    let searchTerms = []
+
+    if (isBangla) {
+      // 1. Exact key matches in BANGLA_HINTS (substring, all matches)
+      const exactMatches = Object.entries(BANGLA_HINTS)
+        .filter(([bangla]) => bangla.includes(input))
+        .map(([, english]) => english.toLowerCase())
+
+      // 2. Phonetic transliteration: Bangla chars → rough Roman equivalent
+      const BANGLA_ROMAN = {
+        'অ':'a','আ':'a','ই':'i','ঈ':'i','উ':'u','ঊ':'u','এ':'e','ঐ':'oi','ও':'o','ঔ':'ou',
+        'ক':'k','খ':'kh','গ':'g','ঘ':'gh','ঙ':'ng',
+        'চ':'ch','ছ':'chh','জ':'j','ঝ':'jh','ঞ':'n',
+        'ট':'t','ঠ':'th','ড':'d','ঢ':'dh','ণ':'n',
+        'ত':'t','থ':'th','দ':'d','ধ':'dh','ন':'n',
+        'প':'p','ফ':'f','ব':'b','ভ':'bh','ম':'m',
+        'য':'j','র':'r','ল':'l','শ':'sh','ষ':'sh','স':'s','হ':'h',
+        'ড়':'r','ঢ়':'rh','য়':'y','ৎ':'t','ং':'ng','ঃ':'h','ঁ':'n',
+        // vowel signs
+        'া':'a','ি':'i','ী':'i','ু':'u','ূ':'u','ে':'e','ৈ':'oi','ো':'o','ৌ':'ou',
+        '্':'', // hasanta (virama) - remove
+      }
+      const transliterate = (str) =>
+        str.split('').map(ch => BANGLA_ROMAN[ch] ?? '').join('')
+
+      const phonetic = transliterate(input).toLowerCase().replace(/\s+/g, '')
+
+      searchTerms = exactMatches.length > 0 ? exactMatches : (phonetic ? [phonetic] : [])
+    } else {
+      searchTerms = [input.toLowerCase()]
+    }
+
+    if (searchTerms.length === 0) { setRegionSuggestions([]); return }
+
+    const scored = BANGLADESH_DISTRICTS.map(d => {
+      const name = d.toLowerCase()
+      const words = name.split(' ')
+      let best = Infinity
+      for (const term of searchTerms) {
+        if (name.includes(term)) { best = -1; break } // exact substring = top priority
+        const tolerance = term.length <= 4 ? 1 : 2
+        for (const word of words) {
+          const dist = levenshtein(word, term)
+          if (dist <= tolerance) best = Math.min(best, dist)
+        }
+      }
+      return { d, best }
+    })
+    .filter(x => x.best !== Infinity)
+    .sort((a, b) => a.best - b.best)
+
+    setRegionSuggestions(scored.map(x => x.d).slice(0, 6))
+  }, [region])
 
   function startSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -145,6 +264,42 @@ function UploadPageInner() {
   function toggleListening() {
     if (isListening) stopSpeechRecognition()
     else startSpeechRecognition()
+  }
+
+  function startRegionRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setError('Voice input is not supported in your browser.')
+      return
+    }
+    const recognition = new SpeechRecognition()
+    regionRecognitionRef.current = recognition
+    recognition.continuous = false
+    recognition.interimResults = false
+    recognition.lang = 'bn-BD'
+    recognition.onstart = () => setIsRegionListening(true)
+    recognition.onerror = (event) => {
+      setError(`Voice recognition issue: ${event.error}`)
+      setIsRegionListening(false)
+    }
+    recognition.onend = () => setIsRegionListening(false)
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim()
+      setRegion(transcript)
+    }
+    recognition.start()
+  }
+
+  function stopRegionRecognition() {
+    if (regionRecognitionRef.current) {
+      regionRecognitionRef.current.stop()
+      setIsRegionListening(false)
+    }
+  }
+
+  function toggleRegionListening() {
+    if (isRegionListening) stopRegionRecognition()
+    else startRegionRecognition()
   }
 
   function handleImageChange(e) {
@@ -290,17 +445,59 @@ function UploadPageInner() {
 
         {/* Region */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-300">এলাকা / Region</label>
-          <input
-            type="text"
-            suppressHydrationWarning
-            placeholder="যেমন: ঢাকা, রাজশাহী, চট্টগ্রাম... / e.g. Dhaka, Rajshahi"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition-colors"
-            onFocus={e => e.target.style.borderColor = meta.color}
-            onBlur={e => e.target.style.borderColor = ''}
-          />
+          <label className="text-sm font-medium text-gray-300">এলাকা / Region (জেলা / District)</label>
+          <div className="relative">
+            <div
+              ref={regionBorderRef}
+              className="relative bg-gray-900 border border-gray-700 rounded-xl overflow-hidden transition-colors"
+              style={{ borderColor: isRegionListening ? '#ef4444' : '' }}>
+              <input
+                type="text"
+                suppressHydrationWarning
+                placeholder="জেলার নাম টাইপ করুন... / Type district name..."
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                className="w-full bg-transparent border-none px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 focus:outline-none"
+                onFocus={() => {
+                  if (regionBorderRef.current) regionBorderRef.current.style.borderColor = meta.color
+                }}
+                onBlur={() => {
+                  if (regionBorderRef.current) regionBorderRef.current.style.borderColor = ''
+                  setTimeout(() => setRegionSuggestions([]), 150)
+                }}
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                suppressHydrationWarning
+                onClick={toggleRegionListening}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all flex items-center justify-center
+                  ${isRegionListening
+                    ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30 ring-1 ring-red-500/40'
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                  }`}
+                title={isRegionListening ? "Stop listening" : "Speak district name"}
+              >
+                {isRegionListening ? <Square size={16} fill="currentColor" /> : <Mic size={16} />}
+              </button>
+            </div>
+            {regionSuggestions.length > 0 && (
+              <ul className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">
+                {regionSuggestions.map((district) => (
+                  <li
+                    key={district}
+                    onMouseDown={() => {
+                      setRegion(district)
+                      setRegionSuggestions([])
+                    }}
+                    className="px-4 py-2.5 text-sm text-white hover:bg-gray-700 cursor-pointer transition-colors"
+                  >
+                    {district}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* Description + Voice */}
