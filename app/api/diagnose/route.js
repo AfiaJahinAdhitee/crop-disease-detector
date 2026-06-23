@@ -3,6 +3,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { createClient } from '@supabase/supabase-js'
 import { analyzeCropImage, analyzeCropImageBangla } from '@/lib/gemini'
 import sharp from 'sharp'
+import { getDistrictWeather } from '@/lib/weather'
 
 const SUPPORTED_CROPS = ["tomato", "potato", "pepper"]
 
@@ -44,6 +45,12 @@ export async function POST(request) {
     let diagnosis
     let secondOpinion = null
 
+    // Fetch weather for the district (non-blocking — if it fails, we proceed without it)
+    const weather = await getDistrictWeather(region)
+    if (weather) {
+      console.log(`🌤️ Weather for ${weather.district}: ${weather.temperature}°C, ${weather.humidity}% humidity, ${weather.description}`)
+    }
+
     // Only use custom model for LEAVES — it is not trained for other parts
     if (SUPPORTED_CROPS.includes(cropType.toLowerCase()) && plantPart === 'leaf') {
       console.log("🧠 Using CUSTOM MODEL for:", cropType)
@@ -54,7 +61,7 @@ export async function POST(request) {
 
       if (!diseaseMatchesCrop) {
         console.log(`⚠️ Model returned "${modelResult.disease}" for crop "${cropType}" — falling back to Gemini`)
-        diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+        diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
         diagnosis.source = "gemini_fallback"
       } else {
         diagnosis = await analyzeCropImageBangla(
@@ -69,7 +76,7 @@ export async function POST(request) {
 
         // Cross-check with Gemini
         console.log("🔍 Cross-checking with Gemini...")
-        const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+        const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
 
         const modelDisease = modelResult.disease.toLowerCase().replace(/_+/g, ' ')
         const geminiDisease = geminiResult.disease_name?.toLowerCase() || ''
@@ -103,14 +110,10 @@ export async function POST(request) {
       }
 
     } else {
-      // Non-leaf parts OR unsupported crop → always Gemini
       console.log(`✨ Using GEMINI for: ${cropType} (part: ${plantPart})`)
-      diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+      diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
       diagnosis.source = "gemini"
     }
-
-    console.log("📊 Final diagnosis source:", diagnosis.source)
-    if (secondOpinion) console.log("📊 Second opinion from Gemini included")
 
     // Save to Supabase
     const supabase = await createServerSupabaseClient()
@@ -144,7 +147,7 @@ export async function POST(request) {
       }
     }
 
-    return Response.json({ success: true, diagnosis, secondOpinion })
+    return Response.json({ success: true, diagnosis, secondOpinion, weather })
   } catch (error) {
     console.error('Diagnosis error:', error)
     return Response.json(

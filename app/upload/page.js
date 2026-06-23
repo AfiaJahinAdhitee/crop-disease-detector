@@ -162,6 +162,7 @@ function UploadPageInner() {
   const [result, setResult] = useState(null)
   const [secondOpinion, setSecondOpinion] = useState(null)
   const [error, setError] = useState(null)
+  const [weather, setWeather] = useState(null)
   const [isListening, setIsListening] = useState(false)
   const [regionSuggestions, setRegionSuggestions] = useState([])
   const recognitionRef = useRef(null)
@@ -333,6 +334,7 @@ function UploadPageInner() {
     setSecondOpinion(null)
     setError(null)
     stopSpeechRecognition()
+    setWeather(null)
   }
 
   async function handleSubmit() {
@@ -358,6 +360,7 @@ function UploadPageInner() {
       if (!data.success) throw new Error(data.error || 'Diagnosis failed')
       setResult(data.diagnosis)
       setSecondOpinion(data.secondOpinion || null)
+      setWeather(data.weather || null)   // ← add this line
     } catch (err) {
       setError(err.message)
     } finally {
@@ -564,9 +567,50 @@ function UploadPageInner() {
           )}
         </button>
 
+        {/* Weather */}
+        {weather && <WeatherCard weather={weather} />}
+
         {/* Results */}
         {result && <DiagnosisCard result={result} accentColor={meta.color} label={meta.label} isSecond={false} />}
         {secondOpinion && <DiagnosisCard result={secondOpinion} accentColor="#60a5fa" label={meta.label} isSecond={true} />}
+      </div>
+    </div>
+  )
+}
+
+function WeatherCard({ weather }) {
+  if (!weather) return null
+  return (
+    <div className="border border-gray-800 rounded-2xl bg-gray-900 overflow-hidden">
+      <div className="px-5 py-3 border-b border-gray-800 flex items-center gap-2">
+        <span className="text-lg">🌤️</span>
+        <p className="text-sm font-semibold text-gray-200">
+          {weather.district} — বর্তমান আবহাওয়া
+        </p>
+      </div>
+      <div className="px-5 py-4 grid grid-cols-2 gap-3 text-sm">
+        <div className="bg-gray-800 rounded-xl px-4 py-3">
+          <p className="text-xs text-gray-500 mb-1">তাপমাত্রা / Temp</p>
+          <p className="text-white font-semibold">{weather.temperature}°C</p>
+        </div>
+        <div className="bg-gray-800 rounded-xl px-4 py-3">
+          <p className="text-xs text-gray-500 mb-1">আর্দ্রতা / Humidity</p>
+          <p className="text-white font-semibold">{weather.humidity}%</p>
+        </div>
+        <div className="bg-gray-800 rounded-xl px-4 py-3">
+          <p className="text-xs text-gray-500 mb-1">বৃষ্টিপাত / Rain</p>
+          <p className="text-white font-semibold">{weather.precipitation} mm</p>
+        </div>
+        <div className="bg-gray-800 rounded-xl px-4 py-3">
+          <p className="text-xs text-gray-500 mb-1">বাতাস / Wind</p>
+          <p className="text-white font-semibold">{weather.windSpeed} km/h</p>
+        </div>
+      </div>
+      <div className="px-5 pb-4">
+        <div className="bg-gray-800 rounded-xl px-4 py-3 text-sm">
+          <p className="text-xs text-gray-500 mb-1">অবস্থা / Condition</p>
+          <p className="text-white">{weather.description}</p>
+        </div>
       </div>
     </div>
   )
