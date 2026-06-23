@@ -138,7 +138,7 @@ export default function DashboardPage() {
               {recentActivity.map((activity) => (
                 <div key={activity.id} className="flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-slate-800">
                   <div>
-                    <h3 className="font-medium text-white">{activity.crop} — <span className="text-green-400">{activity.disease_name || 'Checking...'}</span></h3>
+                    <h3 className="font-medium text-white">{activity.crop_type} — <span className="text-green-400">{activity.disease_name || 'Checking...'}</span></h3>
                     <p className="text-xs text-slate-400 mt-1">Region: {activity.region} | Date: {new Date(activity.created_at).toLocaleDateString()}</p>
                   </div>
                   <span className={`text-xs px-3 py-1 rounded-full border ${getSeverityColor(activity.severity)}`}>

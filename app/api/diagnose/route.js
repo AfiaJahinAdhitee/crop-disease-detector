@@ -1,5 +1,6 @@
 export const runtime = 'nodejs'
-import { createClient } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createClient } from '@supabase/supabase-js'
 import { analyzeCropImage, analyzeCropImageBangla } from '@/lib/gemini'
 import sharp from 'sharp'
 
@@ -112,11 +113,16 @@ export async function POST(request) {
     if (secondOpinion) console.log("📊 Second opinion from Gemini included")
 
     // Save to Supabase
-    const supabase = createClient()
+    const supabase = await createServerSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user) {
-      await supabase.from('diagnoses').insert({
+      const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      )
+
+      const { error: insertError } = await supabaseAdmin.from('diagnoses').insert({
         user_id: user.id,
         crop_type: cropType,
         region: region || null,
@@ -130,6 +136,12 @@ export async function POST(request) {
         raw_ai_response: JSON.stringify(diagnosis),
         source: diagnosis.source,
       })
+
+      if (insertError) {
+        console.error('❌ Supabase insert error:', insertError.message)
+      } else {
+        console.log('✅ Diagnosis saved successfully')
+      }
     }
 
     return Response.json({ success: true, diagnosis, secondOpinion })

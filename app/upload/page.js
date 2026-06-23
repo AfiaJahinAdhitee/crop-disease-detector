@@ -246,6 +246,7 @@ function UploadPageInner() {
               <img src={preview} alt="Preview" className="w-full max-h-80 object-contain p-4" />
               <button
                 onClick={clearImage}
+                suppressHydrationWarning
                 className="absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 rounded-full p-1.5 transition-colors"
               >
                 <X size={16} />
@@ -273,6 +274,7 @@ function UploadPageInner() {
             {CROP_TYPES.map((crop) => (
               <button
                 key={crop}
+                suppressHydrationWarning
                 onClick={() => setCropType(crop)}
                 className="px-4 py-1.5 rounded-full text-sm border transition-colors"
                 style={cropType === crop
@@ -291,6 +293,7 @@ function UploadPageInner() {
           <label className="text-sm font-medium text-gray-300">এলাকা / Region</label>
           <input
             type="text"
+            suppressHydrationWarning
             placeholder="যেমন: ঢাকা, রাজশাহী, চট্টগ্রাম... / e.g. Dhaka, Rajshahi"
             value={region}
             onChange={(e) => setRegion(e.target.value)}
@@ -321,6 +324,7 @@ function UploadPageInner() {
             />
             <button
               type="button"
+              suppressHydrationWarning
               onClick={toggleListening}
               className={`absolute right-3 bottom-3 p-2 rounded-lg transition-all flex items-center justify-center
                 ${isListening
@@ -345,6 +349,7 @@ function UploadPageInner() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
+          suppressHydrationWarning
           disabled={loading || !image || !cropType}
           className="w-full text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:bg-gray-700 disabled:text-gray-500"
           style={!loading && image && cropType ? { backgroundColor: meta.color } : {}}

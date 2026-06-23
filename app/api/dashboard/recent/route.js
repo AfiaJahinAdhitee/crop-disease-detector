@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // সার্ভিস রোল কি দিয়ে সুপাবেস ক্লায়েন্ট তৈরি
