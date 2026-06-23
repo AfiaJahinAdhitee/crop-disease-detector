@@ -152,9 +152,6 @@ export default function DashboardPage() {
 
         {/* বাটনসমূহ */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href="/upload" className="inline-flex items-center justify-center rounded-full bg-green-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-green-400">
-            Go to Upload
-          </Link>
           <Link href="/" className="inline-flex items-center justify-center rounded-full border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-500">
             Back to Home
           </Link>
