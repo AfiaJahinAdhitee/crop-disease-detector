@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X, Mic, Square, ArrowLeft } from 'lucide-react'
+import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X, Mic, Square, ArrowLeft, Volume2 } from 'lucide-react'
 
 const CROP_TYPES = [
   'Tomato', 'Potato', 'Corn', 'Rice', 'Wheat',
@@ -617,6 +617,69 @@ function WeatherCard({ weather }) {
 }
 
 function DiagnosisCard({ result, accentColor, label, isSecond }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoadingTTS, setIsLoadingTTS] = useState(false)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+      }
+    }
+  }, [result])
+
+  async function handleReadAloud() {
+    if (isPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+      setIsPlaying(false)
+      return
+    }
+
+    const parts = []
+    if (result.description) parts.push(`রোগ সম্পর্কে: ${result.description}`)
+    if (result.symptoms) parts.push(`যা দেখা যাচ্ছে: ${result.symptoms}`)
+    if (result.treatment) parts.push(`চিকিৎসা: ${result.treatment}`)
+    if (result.remedies && result.remedies.length > 0) {
+      parts.push(`ধাপে ধাপে সমাধান: ${result.remedies.join(', ')}`)
+    }
+    if (result.prevention) parts.push(`প্রতিরোধ: ${result.prevention}`)
+
+    const fullText = parts.join('। ')
+    if (!fullText) return
+
+    setIsLoadingTTS(true)
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: fullText })
+      })
+
+      if (!res.ok) throw new Error('TTS fetch failed')
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      
+      const audio = new window.Audio(url)
+      audioRef.current = audio
+      audio.onended = () => {
+        setIsPlaying(false)
+        URL.revokeObjectURL(url)
+      }
+      audio.play().catch(e => console.error("Audio playback error:", e))
+      setIsPlaying(true)
+    } catch (err) {
+      console.error('Error generating TTS:', err)
+      alert("অডিও তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।")
+    } finally {
+      setIsLoadingTTS(false)
+    }
+  }
+
   return (
     <div className={`border rounded-2xl overflow-hidden bg-gray-900 ${isSecond ? 'border-yellow-800/50' : 'border-gray-800'}`}>
       {isSecond && (
@@ -696,18 +759,40 @@ function DiagnosisCard({ result, accentColor, label, isSecond }) {
         </div>
       )}
 
-      <div className="px-5 py-3 flex items-center gap-2">
-        {result.source === 'custom_model' ? (
-          <>
-            <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
-            <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে কাস্টম ট্রেইনড মডেল দ্বারা</p>
-          </>
-        ) : (
-          <>
-            <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
-            <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে Gemini AI দ্বারা</p>
-          </>
-        )}
+      <div className="px-5 py-3 flex items-center justify-between border-t border-gray-800 flex-wrap gap-3">
+        <div className="flex items-center gap-2">
+          {result.source === 'custom_model' ? (
+            <>
+              <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+              <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে কাস্টম ট্রেইনড মডেল দ্বারা</p>
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+              <p className="text-xs text-gray-500">বিশ্লেষণ করা হয়েছে Gemini AI দ্বারা</p>
+            </>
+          )}
+        </div>
+        <button
+          onClick={handleReadAloud}
+          disabled={isLoadingTTS}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors border ${
+            isLoadingTTS 
+            ? 'bg-gray-800 text-gray-400 border-gray-700 cursor-not-allowed'
+            : isPlaying 
+              ? 'bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30'
+              : 'bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20'
+          }`}
+        >
+          {isLoadingTTS ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : isPlaying ? (
+            <Square size={16} fill="currentColor" />
+          ) : (
+            <Volume2 size={16} />
+          )}
+          {isLoadingTTS ? 'অডিও প্রস্তুত হচ্ছে...' : isPlaying ? 'থামান / Stop' : 'ফলাফল পাঠ করুন / Read Aloud'}
+        </button>
       </div>
     </div>
   )
