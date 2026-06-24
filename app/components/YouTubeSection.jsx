@@ -18,7 +18,14 @@ export default function YouTubeSection({ diseaseName, cropType }) {
   const playerContainerRef = useRef(null)
 
   // Build query: English disease name + crop for broader results
-  const query = `${cropType} ${diseaseName} plant disease treatment`
+  // Extract Bangla words only from potentially mixed Bangla+English disease name
+  const banglaOnly = diseaseName
+    .replace(/[a-zA-Z0-9\(\)\[\]\{\}\/\\,._-]+/g, ' ')  // strip English, brackets, punctuation
+    .replace(/\s+/g, ' ')
+    .trim()
+  
+  const searchTerm = banglaOnly.length > 3 ? banglaOnly : diseaseName
+  const query = `${cropType} ${searchTerm} গাছের রোগ চিকিৎসা`
 
   useEffect(() => {
     if (!diseaseName) return
@@ -37,8 +44,9 @@ export default function YouTubeSection({ diseaseName, cropType }) {
 
   // Load YouTube IFrame API script once
   useEffect(() => {
-    if (window.YT) return // already loaded
+    if (document.getElementById('yt-api-script')) return // already added
     const tag = document.createElement('script')
+    tag.id = 'yt-api-script'
     tag.src = 'https://www.youtube.com/iframe_api'
     document.body.appendChild(tag)
   }, [])
@@ -51,27 +59,36 @@ export default function YouTubeSection({ diseaseName, cropType }) {
   useEffect(() => {
     if (!activeVideoId) return
 
-    function initPlayer() {
-      if (playerRef.current) {
-        playerRef.current.loadVideoById(activeVideoId)
-        return
-      }
-      playerRef.current = new window.YT.Player('yt-player', {
-        videoId: activeVideoId,
-        playerVars: {
-          autoplay: 1,
-          rel: 0,
-          modestbranding: 1,
-        },
-      })
-    }
+    // Small delay to ensure #yt-player div is in the DOM after state update
+    const timer = setTimeout(() => {
+      function createPlayer() {
+        // Destroy old player if exists
+        if (playerRef.current) {
+          playerRef.current.destroy()
+          playerRef.current = null
+        }
 
-    // YT API may not be ready yet
-    if (window.YT && window.YT.Player) {
-      initPlayer()
-    } else {
-      window.onYouTubeIframeAPIReady = initPlayer
-    }
+        playerRef.current = new window.YT.Player('yt-player', {
+          videoId: activeVideoId,
+          playerVars: {
+            autoplay: 1,
+            rel: 0,
+            modestbranding: 1,
+          },
+          events: {
+            onReady: (e) => e.target.playVideo(),
+          },
+        })
+      }
+
+      if (window.YT && window.YT.Player) {
+        createPlayer()
+      } else {
+        window.onYouTubeIframeAPIReady = createPlayer
+      }
+    }, 100) // wait for DOM to paint
+
+    return () => clearTimeout(timer)
   }, [activeVideoId])
 
   function closePlayer() {
