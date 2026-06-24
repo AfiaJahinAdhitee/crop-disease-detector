@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Upload, Leaf, AlertCircle, CheckCircle, AlertTriangle, Loader2, X, Mic, Square, ArrowLeft, Volume2 } from 'lucide-react'
+import YouTubeSection from '../components/YouTubeSection'
 
 const CROP_TYPES = [
   'Tomato', 'Potato', 'Corn', 'Rice', 'Wheat',
@@ -572,7 +573,18 @@ function UploadPageInner() {
 
         {/* Results */}
         {result && <DiagnosisCard result={result} accentColor={meta.color} label={meta.label} isSecond={false} />}
-        {secondOpinion && <DiagnosisCard result={secondOpinion} accentColor="#60a5fa" label={meta.label} isSecond={true} />}
+        {secondOpinion && <DiagnosisCard result={secondOpinion} accentColor="#60a5fa" label={meta.label} isSecond={true} />}        
+
+        {/* YouTube video suggestions — only shown when a disease is detected */}
+        {result?.disease_detected && (
+          <YouTubeSection
+            diseaseName={
+              // Always use Gemini's disease name as the search basis
+              secondOpinion?.disease_name || result?.disease_name
+            }
+            cropType={cropType}
+          />
+        )}
       </div>
     </div>
   )
