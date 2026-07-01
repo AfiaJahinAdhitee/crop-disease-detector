@@ -1,0 +1,10 @@
+{
+  "name": "Leafline",
+  "short_name": "Leafline",
+  "description": "AI-powered crop disease diagnosis for Bangladesh farmers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#4ade80",
+  "icons": []
+}

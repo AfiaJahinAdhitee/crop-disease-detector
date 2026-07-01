@@ -1,0 +1,105 @@
+{
+  "header": { "history": "History", "diagnosis": "{{part}} Diagnosis" },
+  "photo": {
+    "retake": "Retake",
+    "galleryHint": "Take a photo or choose from gallery",
+    "addPhoto": "Add Photo"
+  },
+  "crop": {
+    "sectionLabel": "Select Crop Type",
+    "required": "*",
+    "names": {
+      "Rice": "Rice", "Potato": "Potato", "Tomato": "Tomato", "Corn": "Corn",
+      "Wheat": "Wheat", "Pepper": "Pepper", "Apple": "Apple", "Grape": "Grape",
+      "Strawberry": "Strawberry", "Other": "Other"
+    }
+  },
+  "optional": {
+    "title": "Add Location & Notes",
+    "badge": "(optional)",
+    "expand": "+ Tap to expand"
+  },
+  "region": {
+    "label": "Area / District Name",
+    "placeholder": "Type district name..."
+  },
+  "description": {
+    "label": "Describe symptoms",
+    "placeholder": "Describe {{part}} symptoms or type here...",
+    "listening": "Listening..."
+  },
+  "voiceError": "Voice input is not supported in this browser. Please use Google Chrome.",
+  "submit": {
+    "idle": "Diagnose",
+    "loading": "Analyzing...",
+    "error": "Please select a photo, crop type, and region.",
+    "done": "Diagnosis Complete"
+  },
+  "result": {
+    "secondOpinionLabel": "Second Opinion from Gemini AI",
+    "readAloud": "Listen to Result",
+    "stop": "Stop",
+    "audioLoading": "Preparing audio...",
+    "audioError": "Failed to generate audio. Please try again.",
+    "showDetail": "View Details",
+    "hideDetail": "Show Less",
+    "sections": {
+      "about": "About this disease",
+      "symptoms": "Symptoms",
+      "treatment": "Treatment",
+      "remedies": "Step-by-step remedies",
+      "prevention": "Prevention"
+    },
+    "sourceCustom": "Custom trained model",
+    "sourceGemini": "Gemini AI",
+    "healthy": "Healthy Plant",
+    "unknown": "Unknown"
+  },
+  "severity": {
+    "none": "Plant is Healthy",
+    "low": "Minor Disease",
+    "medium": "Moderate Disease",
+    "high": "Serious Disease",
+    "critical": "Critical — Act Now"
+  },
+  "confidence": {
+    "highSick": "Confirmed diagnosis",
+    "midSick": "Probable diagnosis",
+    "lowSick": "Uncertain — try another photo",
+    "highHealthy": "Confirmed healthy",
+    "midHealthy": "Likely healthy"
+  },
+  "treatment": {
+    "header": "Treatment Guide",
+    "subtitle": "Treatment Recommendations",
+    "loading": "Preparing treatment recommendations...",
+    "divider": "TREATMENT GUIDE",
+    "yieldLoss": "Yield loss if untreated: {{range}}",
+    "timing": "Application timing",
+    "fieldSize": "Enter field size — get dose and cost estimate",
+    "fieldPlaceholder": "e.g.: 2",
+    "bigha": "Bigha",
+    "acre": "Acre",
+    "convBigha": "{{bigha}} bigha ≈ {{acre}} acre",
+    "convAcre": "{{acre}} acre ≈ {{bigha}} bigha",
+    "tabOrganic": "Organic",
+    "tabChemical": "Chemical",
+    "dosageLabel": "Dosage",
+    "costLabel": "Est. Cost",
+    "perBigha": "/ bigha",
+    "methodLabel": "Application: ",
+    "disclaimer": "* Prices are approximate — consult a specialist."
+  },
+  "weather": {
+    "title": "Current Weather",
+    "temp": "Temperature",
+    "humidity": "Humidity",
+    "rain": "Rainfall",
+    "wind": "Wind",
+    "condition": "Condition"
+  },
+  "youtube": {
+    "loading": "Searching for related videos...",
+    "header": "Related Videos"
+  }
+}

@@ -1,6 +1,7 @@
 export const runtime = 'nodejs'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { randomUUID } from 'crypto'
 import { createClient } from '@supabase/supabase-js'
+import { getUserId } from '@/lib/server-auth'
 import { analyzeCropImage, analyzeCropImageBangla } from '@/lib/gemini'
 import sharp from 'sharp'
 import { getDistrictWeather } from '@/lib/weather'
@@ -115,35 +116,53 @@ export async function POST(request) {
       diagnosis.source = "gemini"
     }
 
-    // Save to Supabase
-    const supabase = await createServerSupabaseClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const userId = await getUserId()
 
-    if (user) {
+    if (userId) {
       const supabaseAdmin = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL,
         process.env.SUPABASE_SERVICE_ROLE_KEY
       )
 
+      const diagnosisId = randomUUID()
+
+      // Upload compressed image to storage — non-blocking, best-effort
+      let imageStoragePath = null
+      try {
+        const storagePath = `${userId}/${diagnosisId}.jpg`
+        const { error: uploadError } = await supabaseAdmin.storage
+          .from('leaf-images')
+          .upload(storagePath, compressed, { contentType: 'image/jpeg', upsert: false })
+        if (!uploadError) {
+          imageStoragePath = storagePath
+        } else {
+          console.warn('⚠️ Image upload failed:', uploadError.message)
+        }
+      } catch (e) {
+        console.warn('⚠️ Image upload exception:', e.message)
+      }
+
       const { error: insertError } = await supabaseAdmin.from('diagnoses').insert({
-        user_id: user.id,
+        id: diagnosisId,
+        user_id: userId,
         crop_type: cropType,
         region: region || null,
         plant_part: plantPart,
         disease_name: diagnosis.disease_name,
         severity: diagnosis.severity,
-        confidence_score: diagnosis.confidence_score,
+        confidence: parseFloat(((diagnosis.confidence_score || 0) * 100).toFixed(1)),
         treatment: diagnosis.treatment,
         prevention: diagnosis.prevention,
         is_healthy: !diagnosis.disease_detected,
         raw_ai_response: JSON.stringify(diagnosis),
         source: diagnosis.source,
+        image_url: imageStoragePath,
       })
 
       if (insertError) {
         console.error('❌ Supabase insert error:', insertError.message)
       } else {
-        console.log('✅ Diagnosis saved successfully')
+        console.log('✅ Diagnosis saved:', diagnosisId)
       }
     }
 

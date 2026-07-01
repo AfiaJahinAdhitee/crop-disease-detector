@@ -5,22 +5,20 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // সার্ভিস রোল কি দিয়ে সুপাবেস ক্লায়েন্ট তৈরি
-    const supabase = createClient(
+    const supabaseAdmin = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    // 🎯 এখানে 'crop' এর জায়গায় 'crop_type' ব্যবহার করা হয়েছে
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('diagnoses')
-      .select('id, region, crop_type, disease_name, severity, created_at')
+      .select('id, region, crop_type, plant_part, disease_name, severity, confidence, is_healthy, created_at')
       .order('created_at', { ascending: false })
-      .limit(5);
+      .limit(20);
 
     if (error) throw error;
 
-    return NextResponse.json(data);
+    return NextResponse.json(data ?? []);
   } catch (error) {
     console.error('Error fetching recent activity:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

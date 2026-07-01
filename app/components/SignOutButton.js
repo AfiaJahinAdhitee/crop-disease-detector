@@ -3,9 +3,12 @@
 import { signOut } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import '@/app/i18n/config'
 
 export default function SignOutButton({ className = '' }) {
   const router = useRouter()
+  const { t } = useTranslation('common')
   const [loading, setLoading] = useState(false)
 
   async function handleSignOut() {
@@ -22,8 +25,8 @@ export default function SignOutButton({ className = '' }) {
       className={className}
       style={{
         background: 'transparent',
-        border: '1px solid rgba(74,222,128,0.2)',
-        color: '#6b7280',
+        border: '1px solid var(--border)',
+        color: 'var(--text-muted)',
         borderRadius: '8px',
         padding: '0.4rem 0.9rem',
         fontSize: '0.82rem',
@@ -32,7 +35,7 @@ export default function SignOutButton({ className = '' }) {
         transition: 'all 0.2s',
       }}
     >
-      {loading ? 'Signing out…' : 'Sign out'}
+      {loading ? t('loading') : t('nav.signOut')}
     </button>
   )
 }

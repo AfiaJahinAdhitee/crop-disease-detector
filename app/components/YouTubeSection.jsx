@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Loader2, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import '@/app/i18n/config'
 
 const YoutubeIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" className="text-red-500">
@@ -9,169 +11,122 @@ const YoutubeIcon = () => (
   </svg>
 )
 
-export default function YouTubeSection({ diseaseName, cropType }) {
+export default function YouTubeSection({ diseaseName, cropType, lang: langProp }) {
+  const { t, i18n } = useTranslation('upload')
+  const lang = langProp ?? (i18n.language?.startsWith('en') ? 'en' : 'bn')
+  const isEn = lang === 'en'
+
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeVideoId, setActiveVideoId] = useState(null)
   const playerRef = useRef(null)
-  const playerContainerRef = useRef(null)
 
-  // Build query: English disease name + crop for broader results
-  // Extract Bangla words only from potentially mixed Bangla+English disease name
-  const banglaOnly = diseaseName
-    .replace(/[a-zA-Z0-9\(\)\[\]\{\}\/\\,._-]+/g, ' ')  // strip English, brackets, punctuation
-    .replace(/\s+/g, ' ')
-    .trim()
-  
-  const searchTerm = banglaOnly.length > 3 ? banglaOnly : diseaseName
-  const query = `${cropType} ${searchTerm} গাছের রোগ চিকিৎসা`
+  const query = isEn
+    ? `${cropType} ${diseaseName} plant disease treatment`
+    : (() => {
+        const banglaOnly = diseaseName
+          .replace(/[a-zA-Z0-9\(\)\[\]\{\}\/\\,._-]+/g, ' ')
+          .replace(/\s+/g, ' ').trim()
+        const term = banglaOnly.length > 3 ? banglaOnly : diseaseName
+        return `${cropType} ${term} গাছের রোগ চিকিৎসা`
+      })()
 
   useEffect(() => {
     if (!diseaseName) return
-    setLoading(true)
-    setError(null)
-
+    setLoading(true); setError(null)
     fetch(`/api/youtube/search?q=${encodeURIComponent(query)}`)
       .then(r => r.json())
-      .then(data => {
-        if (data.success) setVideos(data.videos)
-        else setError(data.error)
-      })
+      .then(data => { if (data.success) setVideos(data.videos); else setError(data.error) })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
-  }, [diseaseName, cropType])
+  }, [diseaseName, cropType, lang])
 
-  // Load YouTube IFrame API script once
   useEffect(() => {
-    if (document.getElementById('yt-api-script')) return // already added
+    if (document.getElementById('yt-api-script')) return
     const tag = document.createElement('script')
     tag.id = 'yt-api-script'
     tag.src = 'https://www.youtube.com/iframe_api'
     document.body.appendChild(tag)
   }, [])
 
-  function openPlayer(videoId) {
-    setActiveVideoId(videoId)
-  }
-
-  // Init or change the YT player when activeVideoId changes
   useEffect(() => {
     if (!activeVideoId) return
-
-    // Small delay to ensure #yt-player div is in the DOM after state update
     const timer = setTimeout(() => {
       function createPlayer() {
-        // Destroy old player if exists
-        if (playerRef.current) {
-          playerRef.current.destroy()
-          playerRef.current = null
-        }
-
+        if (playerRef.current) { playerRef.current.destroy(); playerRef.current = null }
         playerRef.current = new window.YT.Player('yt-player', {
           videoId: activeVideoId,
-          playerVars: {
-            autoplay: 1,
-            rel: 0,
-            modestbranding: 1,
-          },
-          events: {
-            onReady: (e) => e.target.playVideo(),
-          },
+          playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
+          events: { onReady: (e) => e.target.playVideo() },
         })
       }
-
-      if (window.YT && window.YT.Player) {
-        createPlayer()
-      } else {
-        window.onYouTubeIframeAPIReady = createPlayer
-      }
-    }, 100) // wait for DOM to paint
-
+      if (window.YT && window.YT.Player) createPlayer()
+      else window.onYouTubeIframeAPIReady = createPlayer
+    }, 100)
     return () => clearTimeout(timer)
   }, [activeVideoId])
 
   function closePlayer() {
-    if (playerRef.current) {
-      playerRef.current.stopVideo()
-    }
+    if (playerRef.current) playerRef.current.stopVideo()
     setActiveVideoId(null)
   }
 
   if (loading) {
     return (
-      <div className="border border-gray-800 rounded-2xl bg-gray-900 p-5 flex items-center gap-3 text-gray-400 text-sm">
+      <div className="rounded-2xl p-5 flex items-center gap-3 text-sm"
+        style={{ border: '1px solid var(--border)', background: 'var(--bg-card)', color: 'var(--text-secondary)' }}>
         <Loader2 size={16} className="animate-spin" />
-        সংশ্লিষ্ট ভিডিও খোঁজা হচ্ছে...
+        {t('youtube.loading')}
       </div>
     )
   }
 
-  if (error || videos.length === 0) return null // silent fail — no clutter
+  if (error || videos.length === 0) return null
 
   return (
-    <div className="border border-gray-800 rounded-2xl bg-gray-900 overflow-hidden">
-      {/* Header */}
-      <div className="px-5 py-3 border-b border-gray-800 flex items-center gap-2">
+    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+      <div className="px-5 py-3 flex items-center gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
         <YoutubeIcon />
-        <p className="text-sm font-semibold text-gray-200">
-          সম্পর্কিত ভিডিও / Related Videos
-        </p>
+        <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t('youtube.header')}</p>
       </div>
 
-      {/* In-page player */}
       {activeVideoId && (
-        <div className="relative bg-black" ref={playerContainerRef}>
+        <div className="relative bg-black">
           <div id="yt-player" className="w-full aspect-video" />
-          <button
-            onClick={closePlayer}
-            className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition-colors z-10"
-            title="Close player"
-          >
+          <button onClick={closePlayer}
+            className="absolute top-2 right-2 rounded-full p-1.5 transition-colors z-10"
+            style={{ background: 'rgba(0,0,0,0.7)', color: '#ffffff' }}
+            onMouseEnter={e => e.currentTarget.style.background = '#000'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.7)'}>
             <X size={16} />
           </button>
         </div>
       )}
 
-      {/* Thumbnail grid */}
       <div className="p-4 grid grid-cols-1 gap-3">
         {videos.map(video => (
-          <button
-            key={video.video_id}
-            onClick={() => openPlayer(video.video_id)}
-            className={`flex items-start gap-3 p-2 rounded-xl transition-colors text-left w-full
-              ${activeVideoId === video.video_id
-                ? 'bg-gray-700 ring-1 ring-gray-500'
-                : 'hover:bg-gray-800'
-              }`}
-          >
-            {/* Thumbnail */}
+          <button key={video.video_id} onClick={() => setActiveVideoId(video.video_id)}
+            className="flex items-start gap-3 p-2 rounded-xl transition-colors text-left w-full"
+            style={activeVideoId === video.video_id
+              ? { background: 'var(--bg-panel)', outline: '1px solid var(--border-strong)' }
+              : { background: 'transparent' }
+            }
+            onMouseEnter={e => { if (activeVideoId !== video.video_id) e.currentTarget.style.background = 'var(--bg-hover)' }}
+            onMouseLeave={e => { if (activeVideoId !== video.video_id) e.currentTarget.style.background = 'transparent' }}>
             <div className="relative flex-shrink-0 w-32 rounded-lg overflow-hidden">
-              <img
-                src={video.thumbnail}
-                alt={video.title}
-                className="w-full aspect-video object-cover"
-              />
-              {/* Play icon overlay */}
+              <img src={video.thumbnail} alt={video.title} className="w-full aspect-video object-cover" />
               <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                 <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                  <svg viewBox="0 0 16 16" fill="white" width="12" height="12">
-                    <path d="M4 3l9 5-9 5V3z"/>
-                  </svg>
+                  <svg viewBox="0 0 16 16" fill="white" width="12" height="12"><path d="M4 3l9 5-9 5V3z"/></svg>
                 </div>
               </div>
             </div>
-
-            {/* Meta */}
             <div className="flex-1 min-w-0 py-0.5">
-              <p className="text-sm font-medium text-gray-200 line-clamp-2 leading-snug">
-                {video.title}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">{video.channel}</p>
-              <p className="text-xs text-gray-600 mt-0.5">
-                {new Date(video.publish_date).toLocaleDateString('bn-BD', {
-                  year: 'numeric', month: 'short', day: 'numeric'
-                })}
+              <p className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: 'var(--text-primary)' }}>{video.title}</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>{video.channel}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                {new Date(video.publish_date).toLocaleDateString(isEn ? 'en-GB' : 'bn-BD', { year: 'numeric', month: 'short', day: 'numeric' })}
               </p>
             </div>
           </button>

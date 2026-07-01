@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 52" fill="none">
+  <path d="M15 2C23 6 28 15 27 25C26 35 21 43 15 45C9 43 4 35 3 25C2 15 7 6 15 2Z" fill="#16a34a"/>
+  <path d="M15 45C14.6 46.5 14.6 48.5 15 50C15.4 48.5 15.4 46.5 15 45Z" fill="#16a34a"/>
+  <path d="M15 5L15 44" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.65"/>
+  <path d="M15 13Q11 10 9 8"   stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 13Q19 10 21 8"  stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 19Q9 16 5 14"   stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 19Q21 16 25 14" stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 25Q8 22 4 20"   stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 25Q22 22 26 20" stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 31Q9 28 5 26"   stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 31Q21 28 25 26" stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 36Q10 33 7 32"  stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+  <path d="M15 36Q20 33 23 32" stroke="white" stroke-width="1.1" stroke-linecap="round" opacity="0.55" fill="none"/>
+</svg>

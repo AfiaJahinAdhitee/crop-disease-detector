@@ -3,21 +3,24 @@ import * as googleTTS from 'google-tts-api';
 
 export async function POST(request) {
   try {
-    const { text } = await request.json();
+    const { text, lang = 'bn' } = await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
-    const maxTextLength = 10000;
-    const truncatedText = text.slice(0, maxTextLength);
+    // Normalize lang: accept 'bn', 'bn-BD', 'en', 'en-US' etc.
+    const ttsLang = lang.startsWith('en') ? 'en' : 'bn';
+
+    const truncatedText = text.slice(0, 10000);
 
     const chunks = await googleTTS.getAllAudioBase64(truncatedText, {
-      lang: 'bn',
+      lang: ttsLang,
       slow: false,
       host: 'https://translate.google.com',
       timeout: 15000,
-      splitPunct: ',.?!;:-—।', // Including bangla dari '।' for proper splitting
+      // Include Bengali dari (।) only when speaking Bengali
+      splitPunct: ttsLang === 'bn' ? ',.?!;:-—।' : ',.?!;:-—',
     });
 
     const buffers = chunks.map(chunk => Buffer.from(chunk.base64, 'base64'));

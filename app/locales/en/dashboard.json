@@ -1,0 +1,36 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Central hub for crop health and real-time analytics.",
+  "chart": {
+    "title": "Regional Disease Analytics",
+    "allCrops": "All Crops",
+    "loading": "Loading analytics...",
+    "empty": "No data available.",
+    "barLabel": "Case count"
+  },
+  "map": {
+    "title": "Disease Map",
+    "low": "low",
+    "medium": "medium",
+    "high": "high",
+    "windowDays": "last {{days}}d",
+    "loading": "Loading map...",
+    "empty": "No regional data yet. Submit a diagnosis with a region to see it here.",
+    "popup": {
+      "cases": "{{count}} case(s)",
+      "days": "last {{days}} days",
+      "diseases": "Top diseases"
+    }
+  },
+  "recent": {
+    "title": "Recent Activity",
+    "loading": "Loading recent history...",
+    "empty": "No activity yet. Upload a leaf photo to generate your first diagnosis.",
+    "checking": "Checking...",
+    "healthy": "Healthy",
+    "region": "Region",
+    "date": "Date",
+    "normal": "Normal"
+  },
+  "backHome": "Back to Home"
+}

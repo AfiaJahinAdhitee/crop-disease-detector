@@ -1,7 +1,13 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { ACCESS_COOKIE_NAME, verifyAccessToken } from '@/lib/auth-tokens'
+import {
+  ACCESS_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
+  signAccessToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from '@/lib/auth-tokens'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -13,9 +19,46 @@ export async function middleware(request: NextRequest) {
   if (accessToken) {
     try {
       const payload = verifyAccessToken(accessToken)
-      user = { id: payload.sub, email: payload.email, phone: payload.phone }
+      if (typeof payload === 'object' && payload !== null && typeof payload.sub === 'string') {
+        user = {
+          id: payload.sub,
+          email: typeof payload.email === 'string' ? payload.email : undefined,
+          phone: typeof payload.phone === 'string' ? payload.phone : undefined,
+        }
+      }
     } catch {
       user = null
+    }
+  }
+
+  // Silent refresh: access_token missing/expired but refresh_token still valid →
+  // issue a new access_token so subsequent requests work without hitting this path.
+  if (!user) {
+    const refreshToken = request.cookies.get(REFRESH_COOKIE_NAME)?.value
+    if (refreshToken) {
+      try {
+        const rp = verifyRefreshToken(refreshToken)
+        if (typeof rp === 'object' && rp !== null && typeof rp.sub === 'string') {
+          const newAccessToken = signAccessToken({
+            sub: rp.sub,
+            email: rp.email,
+            phone: rp.phone,
+            role: rp.role || 'user',
+          })
+          user = {
+            id: rp.sub,
+            email: typeof rp.email === 'string' ? rp.email : undefined,
+            phone: typeof rp.phone === 'string' ? rp.phone : undefined,
+          }
+          supabaseResponse.cookies.set(ACCESS_COOKIE_NAME, newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 15 * 60,
+            path: '/',
+          })
+        }
+      } catch {}
     }
   }
 
@@ -45,7 +88,7 @@ export async function middleware(request: NextRequest) {
     user = supabaseUser
   }
 
-  const protectedRoutes = ['/', '/dashboard', '/upload']
+  const protectedRoutes = ['/', '/dashboard', '/upload', '/history']
   const isProtected = protectedRoutes.some((route) => pathname === route || (route !== '/' && pathname.startsWith(route)))
 
   if (isProtected && !user) {
@@ -64,5 +107,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/dashboard/:path*', '/upload/:path*', '/login'],
+  matcher: ['/', '/dashboard/:path*', '/upload/:path*', '/history/:path*', '/login'],
 }
