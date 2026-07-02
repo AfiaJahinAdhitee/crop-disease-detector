@@ -13,7 +13,7 @@ async function runCustomModel(imageFile, cropType) {
   pythonForm.append("image", imageFile)
   pythonForm.append("cropType", cropType)
 
-  const res = await fetch("https://alshahriaralif2004-crop-disease-model-api.hf.space/predict", {
+  const res = await fetch(process.env.HF_MODEL_URL, {
     method: "POST",
     body: pythonForm,
   })
