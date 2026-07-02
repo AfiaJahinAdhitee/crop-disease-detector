@@ -1,7 +1,10 @@
 export const runtime = 'nodejs'
-import { createClient } from '@/lib/supabase'
+import { randomUUID } from 'crypto'
+import { createClient } from '@supabase/supabase-js'
+import { getUserId } from '@/lib/server-auth'
 import { analyzeCropImage, analyzeCropImageBangla } from '@/lib/gemini'
 import sharp from 'sharp'
+import { getDistrictWeather } from '@/lib/weather'
 
 const SUPPORTED_CROPS = ["tomato", "potato", "pepper"]
 
@@ -10,7 +13,7 @@ async function runCustomModel(imageFile, cropType) {
   pythonForm.append("image", imageFile)
   pythonForm.append("cropType", cropType)
 
-  const res = await fetch("http://localhost:5000/predict", {
+  const res = await fetch("https://alshahriaralif2004-crop-disease-model-api.hf.space/predict", {
     method: "POST",
     body: pythonForm,
   })
@@ -43,6 +46,12 @@ export async function POST(request) {
     let diagnosis
     let secondOpinion = null
 
+    // Fetch weather for the district (non-blocking — if it fails, we proceed without it)
+    const weather = await getDistrictWeather(region)
+    if (weather) {
+      console.log(`🌤️ Weather for ${weather.district}: ${weather.temperature}°C, ${weather.humidity}% humidity, ${weather.description}`)
+    }
+
     // Only use custom model for LEAVES — it is not trained for other parts
     if (SUPPORTED_CROPS.includes(cropType.toLowerCase()) && plantPart === 'leaf') {
       console.log("🧠 Using CUSTOM MODEL for:", cropType)
@@ -53,7 +62,7 @@ export async function POST(request) {
 
       if (!diseaseMatchesCrop) {
         console.log(`⚠️ Model returned "${modelResult.disease}" for crop "${cropType}" — falling back to Gemini`)
-        diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+        diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
         diagnosis.source = "gemini_fallback"
       } else {
         diagnosis = await analyzeCropImageBangla(
@@ -68,7 +77,7 @@ export async function POST(request) {
 
         // Cross-check with Gemini
         console.log("🔍 Cross-checking with Gemini...")
-        const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+        const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
 
         const modelDisease = modelResult.disease.toLowerCase().replace(/_+/g, ' ')
         const geminiDisease = geminiResult.disease_name?.toLowerCase() || ''
@@ -102,37 +111,62 @@ export async function POST(request) {
       }
 
     } else {
-      // Non-leaf parts OR unsupported crop → always Gemini
       console.log(`✨ Using GEMINI for: ${cropType} (part: ${plantPart})`)
-      diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart)
+      diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
       diagnosis.source = "gemini"
     }
 
-    console.log("📊 Final diagnosis source:", diagnosis.source)
-    if (secondOpinion) console.log("📊 Second opinion from Gemini included")
+    const userId = await getUserId()
 
-    // Save to Supabase
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    if (userId) {
+      const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      )
 
-    if (user) {
-      await supabase.from('diagnoses').insert({
-        user_id: user.id,
+      const diagnosisId = randomUUID()
+
+      // Upload compressed image to storage — non-blocking, best-effort
+      let imageStoragePath = null
+      try {
+        const storagePath = `${userId}/${diagnosisId}.jpg`
+        const { error: uploadError } = await supabaseAdmin.storage
+          .from('leaf-images')
+          .upload(storagePath, compressed, { contentType: 'image/jpeg', upsert: false })
+        if (!uploadError) {
+          imageStoragePath = storagePath
+        } else {
+          console.warn('⚠️ Image upload failed:', uploadError.message)
+        }
+      } catch (e) {
+        console.warn('⚠️ Image upload exception:', e.message)
+      }
+
+      const { error: insertError } = await supabaseAdmin.from('diagnoses').insert({
+        id: diagnosisId,
+        user_id: userId,
         crop_type: cropType,
         region: region || null,
         plant_part: plantPart,
         disease_name: diagnosis.disease_name,
         severity: diagnosis.severity,
-        confidence_score: diagnosis.confidence_score,
+        confidence: parseFloat(((diagnosis.confidence_score || 0) * 100).toFixed(1)),
         treatment: diagnosis.treatment,
         prevention: diagnosis.prevention,
         is_healthy: !diagnosis.disease_detected,
         raw_ai_response: JSON.stringify(diagnosis),
         source: diagnosis.source,
+        image_url: imageStoragePath,
       })
+
+      if (insertError) {
+        console.error('❌ Supabase insert error:', insertError.message)
+      } else {
+        console.log('✅ Diagnosis saved:', diagnosisId)
+      }
     }
 
-    return Response.json({ success: true, diagnosis, secondOpinion })
+    return Response.json({ success: true, diagnosis, secondOpinion, weather })
   } catch (error) {
     console.error('Diagnosis error:', error)
     return Response.json(

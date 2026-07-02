@@ -7,7 +7,9 @@ import LeaflineLogo from '@/app/components/LeaflineLogo'
 import { TEAM } from '@/app/data/team'
 
 export default function Footer() {
-  const { t } = useTranslation(['about', 'common'])
+  const { t, i18n } = useTranslation(['about', 'common'])
+  const isEn = i18n.language === 'en' || i18n.language?.startsWith('en-')
+  const headingClass = `text-xs font-bold mb-4 ${isEn ? 'uppercase tracking-[0.15em]' : ''}`
 
   const usefulLinks = [
     { label: t('about:usefulLinks.moa'), href: 'https://moa.gov.bd/', external: true },
@@ -31,7 +33,7 @@ export default function Footer() {
 
         {/* Useful Links */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.15em] mb-4" style={{ color: 'var(--text-primary)' }}>
+          <p className={headingClass} style={{ color: 'var(--text-primary)' }}>
             {t('about:usefulLinks.title')}
           </p>
           <ul className="space-y-2.5">
@@ -54,7 +56,7 @@ export default function Footer() {
 
         {/* Team */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.15em] mb-4" style={{ color: 'var(--text-primary)' }}>
+          <p className={headingClass} style={{ color: 'var(--text-primary)' }}>
             {t('about:footer.team')}
           </p>
           <a href="/about#team" className="flex items-center gap-2">

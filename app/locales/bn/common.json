@@ -1,0 +1,26 @@
+{
+  "appName": "LEAFLINE",
+  "tagline": "Leafline",
+  "nav": {
+    "history": "ইতিহাস",
+    "historyDesc": "পুরনো রোগ নির্ণয় দেখুন",
+    "dashboard": "Dashboard",
+    "dashboardDesc": "অঞ্চলভিত্তিক রোগের মানচিত্র",
+    "signOut": "লগ আউট",
+    "openMenu": "মেনু খুলুন"
+  },
+  "user": {
+    "default": "ব্যবহারকারী",
+    "location": "📍 {{region}}"
+  },
+  "back": "পিছনে",
+  "delete": "মুছুন",
+  "loading": "লোড হচ্ছে...",
+  "error": "ত্রুটি",
+  "retry": "আবার চেষ্টা করুন",
+  "deleteConfirm": "এই রোগ নির্ণয়টি মুছে দিতে চান?",
+  "deletePermConfirm": "এই রোগ নির্ণয়টি স্থায়ীভাবে মুছে দিতে চান?",
+  "deleteError": "মুছতে সমস্যা হয়েছে: ",
+  "language": "Language",
+  "switchLang": "English"
+}

@@ -1,0 +1,40 @@
+{
+  "list": {
+    "title": "Diagnosis History",
+    "count": "{{count}} records",
+    "loading": "Loading history...",
+    "errorPrefix": "Error: ",
+    "empty": {
+      "title": "No history yet",
+      "desc": "Run a diagnosis — it will be saved here.",
+      "cta": "Start New Diagnosis"
+    },
+    "healthy": "Healthy Plant",
+    "unknown": "Unknown",
+    "deleteLabel": "Delete"
+  },
+  "detail": {
+    "title": "Diagnosis Details",
+    "deleteBtn": "Delete",
+    "loading": "Loading...",
+    "noImage": "Image not available",
+    "deleteConfirm": "Permanently delete this diagnosis?",
+    "deleteError": "Failed to delete: ",
+    "sections": {
+      "confidence": "Confidence",
+      "about": "About this diagnosis",
+      "symptoms": "Symptoms",
+      "treatment": "Treatment",
+      "remedies": "Step-by-step remedies",
+      "prevention": "Prevention"
+    },
+    "severity": "{{level}} severity",
+    "healthy": "Healthy Plant",
+    "unknown": "Unknown",
+    "sourceCustom": "Custom trained model",
+    "sourceGemini": "Gemini AI",
+    "treatmentDivider": "TREATMENT GUIDE",
+    "treatmentTitle": "Treatment Guide",
+    "treatmentSubtitle": "Treatment Recommendations"
+  }
+}

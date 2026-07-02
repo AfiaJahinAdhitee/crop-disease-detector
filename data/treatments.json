@@ -1,0 +1,555 @@
+{
+  "_meta": {
+    "note": "Edit this file to update treatment recommendations. No code changes needed.",
+    "units": {
+      "dosage_per_bigha_amount": "Amount of product needed per bigha of land",
+      "dosage_per_acre_amount": "Amount of product needed per acre of land (1 bigha ≈ 0.33 acres)",
+      "cost_per_bigha_bdt": "Estimated cost in BDT (Bangladeshi Taka) per bigha",
+      "cost_per_acre_bdt": "Estimated cost in BDT per acre"
+    }
+  },
+  "diseases": [
+    {
+      "id": "tomato_late_blight",
+      "disease_name_en": "Tomato Late Blight",
+      "disease_name_bn": "টমেটো নাবী ধ্বসা",
+      "crop": "tomato",
+      "keywords": [
+        "late blight", "নাবী ধ্বসা", "tomato late blight", "phytophthora",
+        "লেট ব্লাইট", "tomato blight", "টমেটো ব্লাইট", "ধ্বসা রোগ"
+      ],
+      "application_timing_bn": "প্রথম লক্ষণ দেখা দেওয়ার সাথে সাথে প্রয়োগ শুরু করুন। প্রতি ৭-১০ দিন পর পর পুনরায় স্প্রে করুন। বৃষ্টির পর আবার প্রয়োগ করুন।",
+      "application_timing_en": "Begin at first sign of disease. Repeat every 7-10 days. Reapply after rain.",
+      "yield_loss_if_untreated": {
+        "percent_range": "40–100%",
+        "description_bn": "চিকিৎসা না করলে আর্দ্র আবহাওয়ায় ৭-১০ দিনের মধ্যে সম্পূর্ণ ফসল নষ্ট হতে পারে।",
+        "description_en": "Can cause complete crop loss within 7-10 days in wet/humid conditions if untreated."
+      },
+      "organic": [
+        {
+          "name_en": "Bordeaux Mixture (1%)",
+          "name_bn": "বোর্দো মিক্সচার ১%",
+          "description_en": "Traditional copper sulfate + lime fungicide. Effective preventive and early curative treatment against Phytophthora.",
+          "description_bn": "তামার সালফেট ও চুনের মিশ্রণ। ফাইটোফথোরার বিরুদ্ধে কার্যকর প্রতিরোধমূলক ও প্রাথমিক চিকিৎসা।",
+          "dosage_per_bigha_amount": 15,
+          "dosage_per_bigha_unit": "L",
+          "dosage_per_acre_amount": 45,
+          "dosage_per_acre_unit": "L",
+          "cost_per_bigha_bdt": 25,
+          "cost_per_acre_bdt": 75,
+          "application_method_bn": "১০০ গ্রাম তুঁতে ও ১০০ গ্রাম পোড়া চুন ১০ লিটার পানিতে মিশিয়ে পাতার উভয় পিঠে স্প্রে করুন।",
+          "application_method_en": "Dissolve 100g copper sulfate and 100g lime in 10L water. Spray on both leaf surfaces."
+        },
+        {
+          "name_en": "Neem Oil Spray (3%)",
+          "name_bn": "নিম তেল স্প্রে (৩%)",
+          "description_en": "Cold-pressed neem oil with broad-spectrum antifungal and insecticidal properties.",
+          "description_bn": "ঠান্ডা প্রেসড নিম তেল — ব্যাপক-স্পেকট্রাম ছত্রাকনাশক ও কীটনাশক বৈশিষ্ট্যসম্পন্ন।",
+          "dosage_per_bigha_amount": 75,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 225,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 30,
+          "cost_per_acre_bdt": 90,
+          "application_method_bn": "৩ মিলি নিম তেল প্রতি লিটার পানিতে মিশিয়ে সন্ধ্যায় স্প্রে করুন। গরম পানি ব্যবহার করবেন না।",
+          "application_method_en": "Mix 3 mL neem oil per liter of water. Apply in the evening. Do not use hot water."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Mancozeb 75% WP (Dithane M-45)",
+          "name_bn": "ম্যানকোজেব ৭৫% WP (ডাইথেন এম-৪৫)",
+          "description_en": "Broad-spectrum contact fungicide. Preventive action. Highly cost-effective.",
+          "description_bn": "ব্যাপক-স্পেকট্রাম যোগাযোগ ছত্রাকনাশক। প্রতিরোধমূলক কার্যক্রম। অত্যন্ত সাশ্রয়ী।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 15,
+          "cost_per_acre_bdt": 45,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে পাতায় ভালো করে স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water. Spray thoroughly on foliage."
+        },
+        {
+          "name_en": "Metalaxyl 8% + Mancozeb 64% WP (Ridomil Gold MZ)",
+          "name_bn": "মেটালক্সিল + ম্যানকোজেব (রিডোমিল গোল্ড)",
+          "description_en": "Systemic + contact combination. Curative and preventive. Highest efficacy against Phytophthora.",
+          "description_bn": "সিস্টেমিক ও যোগাযোগ ছত্রাকনাশকের সমন্বয়। নিরাময়মূলক ও প্রতিরোধমূলক উভয়ই। ফাইটোফথোরার বিরুদ্ধে সর্বোচ্চ কার্যকারিতা।",
+          "dosage_per_bigha_amount": 25,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 75,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 95,
+          "cost_per_acre_bdt": 285,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ১৫ গ্রাম মিশিয়ে ৭-১০ দিন পর পর স্প্রে করুন।",
+          "application_method_en": "Mix 15g per 10 liters of water. Spray every 7-10 days."
+        }
+      ]
+    },
+    {
+      "id": "tomato_early_blight",
+      "disease_name_en": "Tomato Early Blight",
+      "disease_name_bn": "টমেটো আগাম ধ্বসা",
+      "crop": "tomato",
+      "keywords": [
+        "early blight", "আগাম ধ্বসা", "tomato early blight", "alternaria",
+        "আর্লি ব্লাইট", "alternaria solani", "টমেটো পাতার দাগ"
+      ],
+      "application_timing_bn": "রোগের প্রাথমিক লক্ষণ দেখা দেওয়ার সাথে সাথে স্প্রে শুরু করুন। প্রতি ১০-১৪ দিন পর পর পুনরায় প্রয়োগ করুন।",
+      "application_timing_en": "Begin at first symptoms. Repeat every 10-14 days throughout the season.",
+      "yield_loss_if_untreated": {
+        "percent_range": "20–50%",
+        "description_bn": "প্রাথমিক পর্যায়ে পাতা ঝরে যায়, পরে ফল উৎপাদন উল্লেখযোগ্যভাবে কমে যায়।",
+        "description_en": "Causes premature defoliation and significantly reduces fruit yield and quality."
+      },
+      "organic": [
+        {
+          "name_en": "Copper Oxychloride 50% WP",
+          "name_bn": "কপার অক্সিক্লোরাইড ৫০% WP",
+          "description_en": "Copper-based contact fungicide with broad-spectrum activity against fungal diseases.",
+          "description_bn": "তামা-ভিত্তিক যোগাযোগ ছত্রাকনাশক যা বিভিন্ন ছত্রাক রোগের বিরুদ্ধে কার্যকর।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 20,
+          "cost_per_acre_bdt": 60,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে পাতার উভয় পিঠে স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water. Spray on both sides of leaves."
+        },
+        {
+          "name_en": "Trichoderma-based Biofungicide",
+          "name_bn": "ট্রাইকোডার্মা বায়োফাঙ্গিসাইড",
+          "description_en": "Biological fungicide using beneficial Trichoderma fungi to outcompete pathogens. Safe and eco-friendly.",
+          "description_bn": "উপকারী ট্রাইকোডার্মা ছত্রাক ব্যবহার করে রোগ সৃষ্টিকারী জীবাণু দমন করে। নিরাপদ ও পরিবেশবান্ধব।",
+          "dosage_per_bigha_amount": 200,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 600,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 40,
+          "cost_per_acre_bdt": 120,
+          "application_method_bn": "১০ লিটার পানিতে মিশিয়ে মাটিতে ও পাতায় দুই ভাবেই প্রয়োগ করুন।",
+          "application_method_en": "Mix in 10 liters of water and apply both as soil drench and foliar spray."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Azoxystrobin 23% SC (Amistar)",
+          "name_bn": "আজোক্সিস্ট্রোবিন ২৩% SC (অ্যামিস্টার)",
+          "description_en": "Systemic strobilurin fungicide with preventive and curative action. Excellent rainfast properties.",
+          "description_bn": "সিস্টেমিক ছত্রাকনাশক যা বৃষ্টিতেও কার্যকর থাকে। প্রতিরোধমূলক ও নিরাময়মূলক উভয় কার্যক্রম।",
+          "dosage_per_bigha_amount": 5,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 15,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 38,
+          "cost_per_acre_bdt": 114,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ৩-৪ মিলি মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 3-4 mL per 10 liters of water and spray on foliage."
+        },
+        {
+          "name_en": "Chlorothalonil 75% WP (Daconil)",
+          "name_bn": "ক্লোরোথালোনিল ৭৫% WP (ড্যাকোনিল)",
+          "description_en": "Broad-spectrum contact fungicide for many fungal diseases. Preventive action only.",
+          "description_bn": "বহু ছত্রাক রোগের বিরুদ্ধে ব্যাপক-স্পেকট্রাম যোগাযোগ ছত্রাকনাশক। শুধুমাত্র প্রতিরোধমূলক।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 18,
+          "cost_per_acre_bdt": 54,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে নিয়মিত স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water. Apply on a regular schedule."
+        }
+      ]
+    },
+    {
+      "id": "potato_late_blight",
+      "disease_name_en": "Potato Late Blight",
+      "disease_name_bn": "আলু নাবী ধ্বসা",
+      "crop": "potato",
+      "keywords": [
+        "potato late blight", "আলু নাবী ধ্বসা", "আলু ব্লাইট", "potato blight",
+        "phytophthora infestans", "আলুর ধ্বসা রোগ", "potato phytophthora"
+      ],
+      "application_timing_bn": "বপনের ৪৫ দিন পর থেকে প্রতি ৭-১০ দিন পর পর স্প্রে করুন। বৃষ্টির পর আবার প্রয়োগ করুন।",
+      "application_timing_en": "Start spraying 45 days after planting. Repeat every 7-10 days. Reapply after rain.",
+      "yield_loss_if_untreated": {
+        "percent_range": "50–100%",
+        "description_bn": "তীব্র আক্রমণে ৭-১৪ দিনের মধ্যে সম্পূর্ণ ক্ষেত নষ্ট হয়ে যেতে পারে।",
+        "description_en": "Severe infections can wipe out entire fields within 7-14 days under humid conditions."
+      },
+      "organic": [
+        {
+          "name_en": "Bordeaux Mixture (1%)",
+          "name_bn": "বোর্দো মিক্সচার ১%",
+          "description_en": "Classic copper-based preventive fungicide for late blight management in potatoes.",
+          "description_bn": "আলুর নাবী ধ্বসা নিয়ন্ত্রণে ক্লাসিক তামা-ভিত্তিক প্রতিরোধমূলক ছত্রাকনাশক।",
+          "dosage_per_bigha_amount": 15,
+          "dosage_per_bigha_unit": "L",
+          "dosage_per_acre_amount": 45,
+          "dosage_per_acre_unit": "L",
+          "cost_per_bigha_bdt": 25,
+          "cost_per_acre_bdt": 75,
+          "application_method_bn": "১০০ গ্রাম তুঁতে ও ১০০ গ্রাম চুন ১০ লিটার পানিতে মিশিয়ে পাতায় ভালো করে স্প্রে করুন।",
+          "application_method_en": "Dissolve 100g copper sulfate and 100g lime in 10L water. Spray thoroughly on leaves and stems."
+        },
+        {
+          "name_en": "Neem Cake Extract Spray",
+          "name_bn": "নিম খৈল নির্যাস স্প্রে",
+          "description_en": "Neem cake extract as foliar spray for disease suppression and soil health improvement.",
+          "description_bn": "রোগ দমন ও মাটির স্বাস্থ্য উন্নয়নে নিম খৈলের নির্যাস স্প্রে।",
+          "dosage_per_bigha_amount": 500,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 1500,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 20,
+          "cost_per_acre_bdt": 60,
+          "application_method_bn": "৫০০ গ্রাম নিম খৈল ১০ লিটার পানিতে ২৪ ঘণ্টা ভিজিয়ে ছেঁকে স্প্রে করুন।",
+          "application_method_en": "Soak 500g neem cake in 10L water for 24 hours, strain, and spray as foliar treatment."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Mancozeb 75% WP",
+          "name_bn": "ম্যানকোজেব ৭৫% WP",
+          "description_en": "Protectant fungicide essential for potato late blight programs. Often used in rotation.",
+          "description_bn": "আলু নাবী ধ্বসা কর্মসূচিতে অপরিহার্য প্রতিরোধমূলক ছত্রাকনাশক।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 15,
+          "cost_per_acre_bdt": 45,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে পাতা ও কাণ্ডে স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water. Spray on leaves and stems."
+        },
+        {
+          "name_en": "Cymoxanil 8% + Mancozeb 64% WP (Curzate M8)",
+          "name_bn": "সাইমোক্সানিল + ম্যানকোজেব (কার্জেট এম৮)",
+          "description_en": "Curative + protective combination. Stops established infections and prevents new ones.",
+          "description_bn": "নিরাময়মূলক ও প্রতিরোধমূলক সমন্বয়। বিদ্যমান সংক্রমণ বন্ধ করে এবং নতুন সংক্রমণ প্রতিরোধ করে।",
+          "dosage_per_bigha_amount": 30,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 90,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 55,
+          "cost_per_acre_bdt": 165,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২০ গ্রাম মিশিয়ে রোগের প্রাথমিক লক্ষণে স্প্রে করুন।",
+          "application_method_en": "Mix 20g per 10 liters of water. Spray at early signs of disease."
+        }
+      ]
+    },
+    {
+      "id": "rice_blast",
+      "disease_name_en": "Rice Blast",
+      "disease_name_bn": "ধানের ব্লাস্ট রোগ",
+      "crop": "rice",
+      "keywords": [
+        "rice blast", "ধান ব্লাস্ট", "blast", "ব্লাস্ট রোগ", "magnaporthe",
+        "pyricularia", "ধানের পাতা পোড়া", "neck blast", "leaf blast",
+        "শীষ ব্লাস্ট", "পাতা ব্লাস্ট"
+      ],
+      "application_timing_bn": "পাতা ব্লাস্টের জন্য: চারা রোপণের ২০-২৫ দিনের মধ্যে। শীষ ব্লাস্টের জন্য: ধানের ৫% শীষ বের হওয়ার সময়।",
+      "application_timing_en": "For leaf blast: within 20-25 days of transplanting. For neck blast: when 5% of panicles emerge.",
+      "yield_loss_if_untreated": {
+        "percent_range": "10–70%",
+        "description_bn": "শীষ ব্লাস্ট সবচেয়ে বিধ্বংসী — সম্পূর্ণ শীষ চিটা হয়ে যেতে পারে।",
+        "description_en": "Neck blast is the most devastating — entire panicles can become sterile, causing 100% grain loss in severe cases."
+      },
+      "organic": [
+        {
+          "name_en": "Pseudomonas fluorescens Bio-agent",
+          "name_bn": "সিউডোমোনাস ফ্লুরেসেন্স জৈব এজেন্ট",
+          "description_en": "Beneficial bacteria that produces antifungal compounds suppressing blast pathogen. Safe and residue-free.",
+          "description_bn": "উপকারী ব্যাকটেরিয়া যা ব্লাস্ট রোগজীবাণু দমনকারী ছত্রাকবিরোধী যৌগ তৈরি করে।",
+          "dosage_per_bigha_amount": 400,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 1200,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 60,
+          "cost_per_acre_bdt": 180,
+          "application_method_bn": "৪০০ গ্রাম ১০ লিটার পানিতে মিশিয়ে পাতায় স্প্রে করুন বা বীজ শোধনে ব্যবহার করুন।",
+          "application_method_en": "Mix 400g in 10 liters of water. Apply as foliar spray or use for seed treatment."
+        },
+        {
+          "name_en": "Silicon-based Amendment (Potassium Silicate)",
+          "name_bn": "পটাশিয়াম সিলিকেট",
+          "description_en": "Increases plant cell wall strength, making the plant physically resistant to blast penetration.",
+          "description_bn": "গাছের কোষ প্রাচীর মজবুত করে, ব্লাস্ট রোগজীবাণুর প্রবেশ শারীরিকভাবে প্রতিরোধ করে।",
+          "dosage_per_bigha_amount": 200,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 600,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 50,
+          "cost_per_acre_bdt": 150,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ১৩০ গ্রাম মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 130g per 10 liters of water and spray on foliage."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Tricyclazole 75% WP (Beam / Tilt)",
+          "name_bn": "ট্রাইসাইক্লাজল ৭৫% WP (বিম)",
+          "description_en": "Most widely used systemic fungicide for rice blast in Bangladesh. Highly effective.",
+          "description_bn": "বাংলাদেশে ধানের ব্লাস্ট রোগে সবচেয়ে বেশি ব্যবহৃত সিস্টেমিক ছত্রাকনাশক। অত্যন্ত কার্যকর।",
+          "dosage_per_bigha_amount": 15,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 45,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 35,
+          "cost_per_acre_bdt": 105,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ১০ গ্রাম মিশিয়ে পাতা ও শীষে ভালো করে স্প্রে করুন।",
+          "application_method_en": "Mix 10g per 10 liters of water. Spray thoroughly on leaves and panicles."
+        },
+        {
+          "name_en": "Isoprothiolane 40% EC (Fuji-one)",
+          "name_bn": "আইসোপ্রোথিওলেন ৪০% EC (ফুজি-ওয়ান)",
+          "description_en": "Systemic fungicide with both preventive and curative action. Also controls sheath blight.",
+          "description_bn": "প্রতিরোধমূলক ও নিরাময়মূলক উভয় কার্যক্রম সহ সিস্টেমিক ছত্রাকনাশক। কাণ্ড পচাও নিয়ন্ত্রণ করে।",
+          "dosage_per_bigha_amount": 20,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 60,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 40,
+          "cost_per_acre_bdt": 120,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ১৩ মিলি মিশিয়ে স্প্রে করুন।",
+          "application_method_en": "Mix 13 mL per 10 liters of water and spray."
+        }
+      ]
+    },
+    {
+      "id": "wheat_rust",
+      "disease_name_en": "Wheat Rust",
+      "disease_name_bn": "গমের মরিচা রোগ",
+      "crop": "wheat",
+      "keywords": [
+        "wheat rust", "গম মরিচা", "মরিচা রোগ", "rust", "puccinia",
+        "গমের রোগ", "yellow rust", "brown rust", "stripe rust",
+        "হলুদ মরিচা", "বাদামি মরিচা"
+      ],
+      "application_timing_bn": "রোগের প্রথম লক্ষণ (কমলা/হলুদ গুঁড়ো দেখা) দেখামাত্র স্প্রে শুরু করুন। ৭-১৪ দিন পর পুনরায় প্রয়োগ করুন।",
+      "application_timing_en": "Spray immediately at first signs (orange/yellow powdery pustules). Repeat after 7-14 days.",
+      "yield_loss_if_untreated": {
+        "percent_range": "20–70%",
+        "description_bn": "মারাত্মক আক্রমণে দানা শুকিয়ে চিটা হয়ে যায় এবং উৎপাদন ব্যাপকভাবে কমে যায়।",
+        "description_en": "Severe infections cause grain shriveling and substantial reduction in grain weight and yield."
+      },
+      "organic": [
+        {
+          "name_en": "Neem Oil Spray (2%)",
+          "name_bn": "নিম তেল স্প্রে (২%)",
+          "description_en": "Neem oil disrupts spore germination and provides a protective barrier on leaf surfaces.",
+          "description_bn": "নিম তেল রাস্টের রেণু অঙ্কুরোদগম বিঘ্নিত করে এবং পাতার উপর প্রতিরক্ষামূলক আবরণ তৈরি করে।",
+          "dosage_per_bigha_amount": 75,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 225,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 30,
+          "cost_per_acre_bdt": 90,
+          "application_method_bn": "২ মিলি নিম তেল প্রতি লিটার পানিতে মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 2 mL neem oil per liter of water and spray on foliage."
+        },
+        {
+          "name_en": "Copper Oxychloride 50% WP",
+          "name_bn": "কপার অক্সিক্লোরাইড ৫০% WP",
+          "description_en": "Preventive copper fungicide that inhibits rust spore establishment on leaf surfaces.",
+          "description_bn": "প্রতিরোধমূলক তামা ছত্রাকনাশক যা পাতায় মরিচার রেণু প্রতিষ্ঠা বাধা দেয়।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 20,
+          "cost_per_acre_bdt": 60,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water and spray on leaves."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Propiconazole 25% EC (Tilt)",
+          "name_bn": "প্রোপিকোনাজল ২৫% EC (টিলট)",
+          "description_en": "Highly effective systemic triazole fungicide. Curative action on rust. Gold standard treatment.",
+          "description_bn": "অত্যন্ত কার্যকর সিস্টেমিক ট্রায়াজল ছত্রাকনাশক। মরিচার বিরুদ্ধে নিরাময়মূলক কার্যক্রম।",
+          "dosage_per_bigha_amount": 10,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 30,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 45,
+          "cost_per_acre_bdt": 135,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ৬ মিলি মিশিয়ে পাতায় ভালো করে স্প্রে করুন।",
+          "application_method_en": "Mix 6 mL per 10 liters of water and spray thoroughly on leaves."
+        },
+        {
+          "name_en": "Tebuconazole 25% EC",
+          "name_bn": "টেবুকোনাজল ২৫% EC",
+          "description_en": "Systemic triazole with excellent activity against all types of wheat rust. Good persistence.",
+          "description_bn": "সমস্ত ধরনের গম মরিচার বিরুদ্ধে চমৎকার কার্যক্ষমতা সহ সিস্টেমিক ট্রায়াজল।",
+          "dosage_per_bigha_amount": 10,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 30,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 50,
+          "cost_per_acre_bdt": 150,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ৭ মিলি মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 7 mL per 10 liters of water and spray on foliage."
+        }
+      ]
+    },
+    {
+      "id": "corn_gray_leaf_spot",
+      "disease_name_en": "Corn Gray Leaf Spot",
+      "disease_name_bn": "ভুট্টার ধূসর পাতা দাগ",
+      "crop": "corn",
+      "keywords": [
+        "gray leaf spot", "ধূসর পাতা দাগ", "corn gray leaf spot", "cercospora",
+        "ভুট্টার রোগ", "grey leaf spot", "corn disease", "maize gray leaf"
+      ],
+      "application_timing_bn": "রোগের প্রথম লক্ষণ দেখা দেওয়ার সাথে সাথে স্প্রে করুন। উচ্চ আর্দ্রতার সময় প্রতি ১০-১৪ দিন পর পর পুনরায় প্রয়োগ করুন।",
+      "application_timing_en": "Spray at first symptoms. Repeat every 10-14 days during high humidity periods.",
+      "yield_loss_if_untreated": {
+        "percent_range": "10–40%",
+        "description_bn": "তীব্র আক্রমণে পাতা সম্পূর্ণ পুড়ে যায়, দানা ভরার পরিমাণ কমে যায়।",
+        "description_en": "Severe infections cause complete leaf blighting, reducing photosynthesis and grain fill."
+      },
+      "organic": [
+        {
+          "name_en": "Copper Hydroxide 77% WP (Kocide)",
+          "name_bn": "কপার হাইড্রক্সাইড ৭৭% WP (কোসাইড)",
+          "description_en": "Preventive copper-based fungicide effective against Cercospora and other fungal diseases.",
+          "description_bn": "সার্কোস্পোরা ও অন্যান্য ছত্রাক রোগের বিরুদ্ধে কার্যকর তামা-ভিত্তিক প্রতিরোধমূলক ছত্রাকনাশক।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 25,
+          "cost_per_acre_bdt": 75,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water and spray on leaves."
+        },
+        {
+          "name_en": "Neem Extract Spray",
+          "name_bn": "নিম নির্যাস স্প্রে",
+          "description_en": "Neem extract suppresses Cercospora spore germination and spread.",
+          "description_bn": "নিম নির্যাস সার্কোস্পোরার রেণু অঙ্কুরোদগম ও বিস্তার দমন করে।",
+          "dosage_per_bigha_amount": 100,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 300,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 40,
+          "cost_per_acre_bdt": 120,
+          "application_method_bn": "১০ মিলি নিম নির্যাস প্রতি লিটার পানিতে মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 10 mL neem extract per liter of water and spray on leaves."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Azoxystrobin 23% + Propiconazole 11.7% SC (Quilt Xcel)",
+          "name_bn": "আজোক্সিস্ট্রোবিন + প্রোপিকোনাজল (কুইল্ট এক্সেল)",
+          "description_en": "Dual-mode fungicide combining strobilurin and triazole for superior grey leaf spot control.",
+          "description_bn": "স্ট্রোবিলুরিন ও ট্রায়াজলের সমন্বয়ে দ্বৈত কার্যপ্রণালীর ছত্রাকনাশক।",
+          "dosage_per_bigha_amount": 8,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 24,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 60,
+          "cost_per_acre_bdt": 180,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ৫ মিলি মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Mix 5 mL per 10 liters of water and spray on foliage."
+        },
+        {
+          "name_en": "Mancozeb 75% WP",
+          "name_bn": "ম্যানকোজেব ৭৫% WP",
+          "description_en": "Cost-effective contact fungicide. Best used preventively or in rotation with systemic fungicides.",
+          "description_bn": "সাশ্রয়ী যোগাযোগ ছত্রাকনাশক। প্রতিরোধমূলক হিসেবে বা সিস্টেমিক ছত্রাকনাশকের সাথে পালাক্রমে ব্যবহার করুন।",
+          "dosage_per_bigha_amount": 40,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 120,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 15,
+          "cost_per_acre_bdt": 45,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২৫ গ্রাম মিশিয়ে স্প্রে করুন।",
+          "application_method_en": "Mix 25g per 10 liters of water and spray."
+        }
+      ]
+    },
+    {
+      "id": "pepper_bacterial_spot",
+      "disease_name_en": "Pepper Bacterial Spot",
+      "disease_name_bn": "মরিচের ব্যাকটেরিয়া দাগ রোগ",
+      "crop": "pepper",
+      "keywords": [
+        "bacterial spot", "ব্যাকটেরিয়া দাগ", "pepper bacterial spot", "xanthomonas",
+        "মরিচের দাগ রোগ", "pepper leaf spot", "মরিচ ব্যাকটেরিয়া",
+        "মরিচের পাতা দাগ", "pepper disease"
+      ],
+      "application_timing_bn": "রোগের প্রথম লক্ষণ দেখা দেওয়ার সাথে সাথে শুরু করুন। প্রতি ৭-১০ দিন পর পর প্রয়োগ করুন। বৃষ্টির পর আবার স্প্রে করুন।",
+      "application_timing_en": "Begin at first symptoms. Apply every 7-10 days. Reapply after rain.",
+      "yield_loss_if_untreated": {
+        "percent_range": "10–30%",
+        "description_bn": "পাতা ঝরে যায়, ফলে দাগ পড়ে এবং বাজারমূল্য কমে যায়।",
+        "description_en": "Causes premature leaf drop, fruit lesions, and reduced marketability."
+      },
+      "organic": [
+        {
+          "name_en": "Copper Bactericide (Copper Hydroxide 77%)",
+          "name_bn": "কপার ব্যাকটেরিসাইড (কপার হাইড্রক্সাইড ৭৭%)",
+          "description_en": "Copper compounds are the primary organic/natural bactericide for bacterial spot management.",
+          "description_bn": "ব্যাকটেরিয়া দাগ নিয়ন্ত্রণে তামার যৌগই প্রধান জৈব/প্রাকৃতিক ব্যাকটেরিসাইড।",
+          "dosage_per_bigha_amount": 30,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 90,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 30,
+          "cost_per_acre_bdt": 90,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২০ গ্রাম মিশিয়ে পাতার উভয় পিঠে স্প্রে করুন।",
+          "application_method_en": "Mix 20g per 10 liters of water. Spray on both sides of leaves."
+        },
+        {
+          "name_en": "Hydrogen Peroxide (3%) Spray",
+          "name_bn": "হাইড্রোজেন পারঅক্সাইড (৩%) স্প্রে",
+          "description_en": "Dilute hydrogen peroxide kills surface bacteria on contact. Safe and residue-free.",
+          "description_bn": "পাতলা হাইড্রোজেন পারঅক্সাইড সংস্পর্শে পৃষ্ঠের ব্যাকটেরিয়া ধ্বংস করে। নিরাপদ ও অবশিষ্টমুক্ত।",
+          "dosage_per_bigha_amount": 50,
+          "dosage_per_bigha_unit": "mL",
+          "dosage_per_acre_amount": 150,
+          "dosage_per_acre_unit": "mL",
+          "cost_per_bigha_bdt": 20,
+          "cost_per_acre_bdt": 60,
+          "application_method_bn": "৩% H₂O₂ সরাসরি বা ১ অংশ H₂O₂ ও ১ অংশ পানি মিশিয়ে পাতায় স্প্রে করুন।",
+          "application_method_en": "Use 3% H₂O₂ directly or dilute 1:1 with water and spray on foliage."
+        }
+      ],
+      "chemical": [
+        {
+          "name_en": "Copper Hydroxide 77% WP (Kocide 3000)",
+          "name_bn": "কপার হাইড্রক্সাইড ৭৭% WP (কোসাইড ৩০০০)",
+          "description_en": "Most effective registered bactericide for bacterial spot in peppers. Preventive and curative.",
+          "description_bn": "মরিচের ব্যাকটেরিয়া দাগের জন্য সবচেয়ে কার্যকর নিবন্ধিত ব্যাকটেরিসাইড।",
+          "dosage_per_bigha_amount": 30,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 90,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 35,
+          "cost_per_acre_bdt": 105,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ২০ গ্রাম মিশিয়ে নিয়মিত স্প্রে করুন।",
+          "application_method_en": "Mix 20g per 10 liters of water. Apply on a regular spray schedule."
+        },
+        {
+          "name_en": "Streptomycin Sulfate 20% + Copper Oxychloride 50%",
+          "name_bn": "স্ট্রেপটোমাইসিন সালফেট ২০% + কপার অক্সিক্লোরাইড ৫০%",
+          "description_en": "Antibiotic + copper combination. High efficacy for serious bacterial spot outbreaks.",
+          "description_bn": "অ্যান্টিবায়োটিক ও তামার সমন্বয়। মারাত্মক ব্যাকটেরিয়া দাগ প্রাদুর্ভাবে উচ্চ কার্যকারিতা।",
+          "dosage_per_bigha_amount": 10,
+          "dosage_per_bigha_unit": "g",
+          "dosage_per_acre_amount": 30,
+          "dosage_per_acre_unit": "g",
+          "cost_per_bigha_bdt": 80,
+          "cost_per_acre_bdt": 240,
+          "application_method_bn": "প্রতি ১০ লিটার পানিতে ৭ গ্রাম মিশিয়ে স্প্রে করুন। প্রতিরোধক্ষমতা এড়াতে ঘূর্ণনে ব্যবহার করুন।",
+          "application_method_en": "Mix 7g per 10 liters of water. Rotate with other products to prevent resistance."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "appName": "LEAFLINE",
+  "tagline": "Leafline",
+  "nav": {
+    "history": "History",
+    "historyDesc": "View past diagnoses",
+    "dashboard": "Dashboard",
+    "dashboardDesc": "Regional disease map",
+    "signOut": "Sign Out",
+    "openMenu": "Open menu"
+  },
+  "user": {
+    "default": "User",
+    "location": "📍 {{region}}"
+  },
+  "back": "Back",
+  "delete": "Delete",
+  "loading": "Loading...",
+  "error": "Error",
+  "retry": "Try Again",
+  "deleteConfirm": "Delete this diagnosis?",
+  "deletePermConfirm": "Permanently delete this diagnosis?",
+  "deleteError": "Failed to delete: ",
+  "language": "ভাষা",
+  "switchLang": "বাংলা"
+}

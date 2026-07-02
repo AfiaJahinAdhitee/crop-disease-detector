@@ -1,0 +1,105 @@
+{
+  "header": { "history": "ইতিহাস", "diagnosis": "{{part}} রোগ নির্ণয়" },
+  "photo": {
+    "retake": "পুনরায় তুলুন",
+    "galleryHint": "ছবি তুলুন বা গ্যালারি থেকে বেছে নিন",
+    "addPhoto": "ছবি যোগ করুন"
+  },
+  "crop": {
+    "sectionLabel": "ফসলের ধরন বেছে নিন",
+    "required": "*",
+    "names": {
+      "Rice": "ধান", "Potato": "আলু", "Tomato": "টমেটো", "Corn": "ভুট্টা",
+      "Wheat": "গম", "Pepper": "মরিচ", "Apple": "আপেল", "Grape": "আঙুর",
+      "Strawberry": "স্ট্রবেরি", "Other": "অন্যান্য"
+    }
+  },
+  "optional": {
+    "title": "এলাকা ও বিবরণ যোগ করুন",
+    "badge": "(ঐচ্ছিক)",
+    "expand": "+ চাপুন"
+  },
+  "region": {
+    "label": "এলাকা / জেলার নাম",
+    "placeholder": "জেলার নাম টাইপ করুন..."
+  },
+  "description": {
+    "label": "লক্ষণ বলুন বা লিখুন",
+    "placeholder": "{{part}} সম্পর্কে লক্ষণ বলুন বা টাইপ করুন...",
+    "listening": "শুনছি..."
+  },
+  "voiceError": "ভয়েস ইনপুট এই ব্রাউজারে সাপোর্ট করে না। Google Chrome ব্যবহার করুন।",
+  "submit": {
+    "idle": "রোগ নির্ণয় করুন",
+    "loading": "বিশ্লেষণ করা হচ্ছে...",
+    "error": "ছবি, ফসলের ধরন এবং অঞ্চল বেছে নিন।",
+    "done": "নির্ণয় সম্পন্ন"
+  },
+  "result": {
+    "secondOpinionLabel": "Gemini AI এর মতামত",
+    "readAloud": "ফলাফল শুনুন",
+    "stop": "থামান",
+    "audioLoading": "অডিও প্রস্তুত হচ্ছে...",
+    "audioError": "অডিও তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+    "showDetail": "বিস্তারিত দেখুন",
+    "hideDetail": "কম দেখুন",
+    "sections": {
+      "about": "রোগ সম্পর্কে",
+      "symptoms": "যা দেখা যাচ্ছে",
+      "treatment": "চিকিৎসা",
+      "remedies": "ধাপে ধাপে সমাধান",
+      "prevention": "প্রতিরোধ"
+    },
+    "sourceCustom": "কাস্টম ট্রেইনড মডেল",
+    "sourceGemini": "Gemini AI",
+    "healthy": "সুস্থ গাছ",
+    "unknown": "অজানা"
+  },
+  "severity": {
+    "none": "গাছটি সুস্থ",
+    "low": "সামান্য রোগ",
+    "medium": "মাঝারি রোগ",
+    "high": "গুরুতর রোগ",
+    "critical": "অতি জরুরি"
+  },
+  "confidence": {
+    "highSick": "নিশ্চিত রোগ নির্ণয়",
+    "midSick": "সম্ভাব্য রোগ নির্ণয়",
+    "lowSick": "অনিশ্চিত — আরেকটি ছবি পাঠান",
+    "highHealthy": "নিশ্চিত সুস্থ",
+    "midHealthy": "মোটামুটি সুস্থ"
+  },
+  "treatment": {
+    "header": "চিকিৎসার গাইড",
+    "subtitle": "চিকিৎসার পরামর্শ",
+    "loading": "চিকিৎসার পরামর্শ তৈরি হচ্ছে...",
+    "divider": "চিকিৎসার গাইড",
+    "yieldLoss": "চিকিৎসা না করলে ফলন ক্ষতি: {{range}}",
+    "timing": "প্রয়োগের সময়",
+    "fieldSize": "জমির পরিমাণ লিখুন — ডোজ ও খরচ হিসাব পাবেন",
+    "fieldPlaceholder": "যেমন: 2",
+    "bigha": "বিঘা",
+    "acre": "একর",
+    "convBigha": "{{bigha}} বিঘা ≈ {{acre}} একর",
+    "convAcre": "{{acre}} একর ≈ {{bigha}} বিঘা",
+    "tabOrganic": "জৈব",
+    "tabChemical": "রাসায়নিক",
+    "dosageLabel": "মাত্রা",
+    "costLabel": "আনুমানিক খরচ",
+    "perBigha": "/ বিঘা",
+    "methodLabel": "প্রয়োগ পদ্ধতি: ",
+    "disclaimer": "* মূল্য আনুমানিক — বিশেষজ্ঞের পরামর্শ নিন।"
+  },
+  "weather": {
+    "title": "বর্তমান আবহাওয়া",
+    "temp": "তাপমাত্রা",
+    "humidity": "আর্দ্রতা",
+    "rain": "বৃষ্টিপাত",
+    "wind": "বাতাস",
+    "condition": "অবস্থা"
+  },
+  "youtube": {
+    "loading": "সংশ্লিষ্ট ভিডিও খোঁজা হচ্ছে...",
+    "header": "সম্পর্কিত ভিডিও"
+  }
+}

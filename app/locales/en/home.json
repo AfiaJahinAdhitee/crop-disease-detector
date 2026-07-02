@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "label": "Leafline",
+    "title": "Which part has a problem?",
+    "desc": "Select the affected part of your plant and submit a photo for diagnosis."
+  },
+  "parts": {
+    "leaf":   { "label": "Leaf",          "labelEn": "Leaf",          "desc": "Spots, discoloration, holes or wilting on leaves",        "uploadHint": "Take a clear photo of the leaf" },
+    "root":   { "label": "Root",          "labelEn": "Root",          "desc": "Root rot, discoloration or fungal infection",             "uploadHint": "Take a clear photo of the root (remove soil first)" },
+    "fruit":  { "label": "Fruit",         "labelEn": "Fruit",         "desc": "Rot, spots, deformity or premature drop",                 "uploadHint": "Take a clear photo of the fruit (including spots)" },
+    "flower": { "label": "Flower",        "labelEn": "Flower",        "desc": "Discoloration, rot or falling flowers",                   "uploadHint": "Take a clear photo of the flower" },
+    "body":   { "label": "Stem / Branch", "labelEn": "Stem / Branch", "desc": "Stem cracks, rot, bark peeling or drying",               "uploadHint": "Take a clear photo of the stem or branch" }
+  },
+  "diagnose": "Diagnose →"
+}

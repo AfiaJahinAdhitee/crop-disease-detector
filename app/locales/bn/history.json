@@ -1,0 +1,40 @@
+{
+  "list": {
+    "title": "রোগ নির্ণয়ের ইতিহাস",
+    "count": "{{count}} টি",
+    "loading": "ইতিহাস লোড হচ্ছে...",
+    "errorPrefix": "ত্রুটি: ",
+    "empty": {
+      "title": "কোনো ইতিহাস নেই",
+      "desc": "রোগ নির্ণয় করুন — এটি এখানে সংরক্ষিত হবে।",
+      "cta": "নতুন নির্ণয় শুরু করুন"
+    },
+    "healthy": "সুস্থ গাছ",
+    "unknown": "অজানা",
+    "deleteLabel": "মুছুন"
+  },
+  "detail": {
+    "title": "রোগ নির্ণয়ের বিস্তারিত",
+    "deleteBtn": "মুছুন",
+    "loading": "লোড হচ্ছে...",
+    "noImage": "ছবি পাওয়া যায়নি",
+    "deleteConfirm": "এই রোগ নির্ণয়টি স্থায়ীভাবে মুছে দিতে চান?",
+    "deleteError": "মুছতে সমস্যা হয়েছে: ",
+    "sections": {
+      "confidence": "আস্থার মাত্রা",
+      "about": "রোগ সম্পর্কে",
+      "symptoms": "যা দেখা যাচ্ছে",
+      "treatment": "চিকিৎসা",
+      "remedies": "ধাপে ধাপে সমাধান",
+      "prevention": "প্রতিরোধ"
+    },
+    "severity": "{{level}} তীব্রতা",
+    "healthy": "সুস্থ গাছ",
+    "unknown": "অজানা",
+    "sourceCustom": "কাস্টম ট্রেইনড মডেল",
+    "sourceGemini": "Gemini AI",
+    "treatmentDivider": "চিকিৎসার গাইড",
+    "treatmentTitle": "চিকিৎসার পরামর্শ",
+    "treatmentSubtitle": "চিকিৎসার পরামর্শ"
+  }
+}

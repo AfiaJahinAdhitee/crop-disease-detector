@@ -1,26 +1,228 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─── Leafline logo animation ────────────────────────────────────────────────
+   Applied via className="leafline-animate" on the leaf <g> element.
+   Uses fill-box so transform-origin is relative to the shape itself.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes leafline-breathe {
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.07); }
 }
 
+.leafline-animate {
+  animation: leafline-breathe 2.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* ─── LeafPulse animation ────────────────────────────────────────────────────
+   Ripple radiates outward from the center vein through the lateral veins.
+   Color: var(--brand-pulse) — a lighter/brighter green than the leaf body.
+   Only opacity is animated — compositor-only, no layout or paint cost.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes leaf-ripple {
+  0%   { opacity: 0;    }
+  12%  { opacity: 0.88; }
+  30%  { opacity: 0;    }
+  100% { opacity: 0;    }
+}
+
+/* Center vein: pulse travels from base to tip via stroke-dashoffset.
+   C_VEIN = 'M15 5L15 44' — straight line, length = exactly 39 SVG units. */
+@keyframes leaf-vein-draw {
+  0%   { stroke-dashoffset: 39; opacity: 0.9; }
+  82%  { stroke-dashoffset: 0;  opacity: 0.7; }
+  94%  { stroke-dashoffset: 0;  opacity: 0;   }
+  100% { stroke-dashoffset: 39; opacity: 0;   }
+}
+
+/* Whole-leaf glow: body brightens subtly as the wave passes through */
+@keyframes leaf-glow {
+  0%   { opacity: 0;    }
+  20%  { opacity: 0.22; }
+  55%  { opacity: 0;    }
+  100% { opacity: 0;    }
+}
+
+.leaf-ripple-anim {
+  opacity: 0;
+}
+
+.leaf-vein-draw {
+  stroke-dasharray: 39;
+  stroke-dashoffset: 39;
+  opacity: 0;
+}
+
+.leaf-glow-anim {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .leaf-ripple-anim  { will-change: opacity; }
+  .leaf-vein-draw    { will-change: stroke-dashoffset, opacity; }
+  .leaf-glow-anim    { will-change: opacity; }
+}
+
+/* Pause all leaf animations */
+.leaf-animations-paused .leaf-ripple-anim,
+.leaf-animations-paused .leaf-vein-draw,
+.leaf-animations-paused .leaf-glow-anim,
+.leaf-animations-paused .leafline-animate {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaf-ripple-anim  { animation: none !important; opacity: 0 !important; }
+  .leaf-vein-draw    { animation: none !important; opacity: 0 !important; }
+  .leaf-glow-anim    { animation: none !important; opacity: 0 !important; }
+}
+
+/* ─── Semantic color tokens ──────────────────────────────────────────────────
+   Components use var(--token) for inline styles and bg-page / text-ink etc.
+   as Tailwind utilities (mapped via @theme below).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Dark theme — applied by default AND when data-theme="dark" */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg-page:     #03080f;   /* outermost page bg          */
+  --bg-card:     #0f1923;   /* cards / section panels     */
+  --bg-panel:    #111827;   /* gray-900 equivalent        */
+  --bg-overlay:  #0d1b2a;   /* drawer / modal             */
+  --bg-input:    #111827;   /* form inputs                */
+  --bg-hover:    rgba(255,255,255,0.06);
+
+  /* Borders */
+  --border:        #1e293b;   /* default                  */
+  --border-strong: #334155;   /* stronger / focused       */
+
+  /* Text */
+  --text-primary:   #f1f5f9;  /* headings / main body     */
+  --text-secondary: #94a3b8;  /* labels / meta            */
+  --text-muted:     #475569;  /* placeholder / ghost      */
+
+  /* Brand (green) */
+  --brand:        #4ade80;
+  --brand-active: #22c55e;
+  --brand-on:     #052e16;    /* text on brand bg         */
+  --brand-bg:     rgba(34,197,94,0.12);
+  --brand-ring:   rgba(34,197,94,0.35);
+  --brand-pulse:  #f0fdf4;    /* ripple highlight — near-white green for maximum contrast on dark leaf */
+
+  /* Severity — hero background, border, text */
+  --sev-none-bg:      #052e16;  --sev-none-border:     #166534;  --sev-none-text:     #4ade80;
+  --sev-low-bg:       #1c1404;  --sev-low-border:      #a16207;  --sev-low-text:      #fbbf24;
+  --sev-mid-bg:       #1a0f04;  --sev-mid-border:      #c2410c;  --sev-mid-text:      #fb923c;
+  --sev-high-bg:      #1c0404;  --sev-high-border:     #b91c1c;  --sev-high-text:     #f87171;
+  --sev-crit-bg:      #1a0000;  --sev-crit-border:     #991b1b;  --sev-crit-text:     #ef4444;
+
+  /* Map */
+  --map-tile-url: 'dark_all';
+
+  /* Leaflet popups */
+  --popup-bg:     #1e293b;
+  --popup-text:   #e2e8f0;
+  --popup-border: #334155;
+  --popup-meta:   #94a3b8;
+  --popup-btn:    #94a3b8;
+}
+
+/* Light theme ─────────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-page:    #f0f4f8;
+  --bg-card:    #ffffff;
+  --bg-panel:   #f8fafc;
+  --bg-overlay: #ffffff;
+  --bg-input:   #f1f5f9;
+  --bg-hover:   rgba(0,0,0,0.04);
+
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+
+  --brand:        #16a34a;
+  --brand-active: #15803d;
+  --brand-on:     #ffffff;
+  --brand-bg:     rgba(22,163,74,0.10);
+  --brand-ring:   rgba(22,163,74,0.30);
+  --brand-pulse:  #dcfce7;    /* ripple highlight — very light green for maximum contrast on dark-green leaf */
+
+  --sev-none-bg:  #dcfce7;  --sev-none-border: #86efac;  --sev-none-text: #15803d;
+  --sev-low-bg:   #fef9c3;  --sev-low-border:  #fde047;  --sev-low-text:  #854d0e;
+  --sev-mid-bg:   #ffedd5;  --sev-mid-border:  #fb923c;  --sev-mid-text:  #9a3412;
+  --sev-high-bg:  #fee2e2;  --sev-high-border: #fca5a5;  --sev-high-text: #991b1b;
+  --sev-crit-bg:  #fecaca;  --sev-crit-border: #ef4444;  --sev-crit-text: #7f1d1d;
+
+  --map-tile-url: 'positron';
+
+  --popup-bg:     #ffffff;
+  --popup-text:   #0f172a;
+  --popup-border: #e2e8f0;
+  --popup-meta:   #475569;
+  --popup-btn:    #64748b;
+}
+
+/* ─── Tailwind v4: register semantic tokens as utility classes ───────────────
+   bg-page / bg-card / text-ink / border-edge etc.
+   ─────────────────────────────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Surfaces */
+  --color-page:    var(--bg-page);
+  --color-card:    var(--bg-card);
+  --color-panel:   var(--bg-panel);
+  --color-overlay: var(--bg-overlay);
+  --color-inset:   var(--bg-input);
+
+  /* Borders */
+  --color-edge: var(--border);
+  --color-rim:  var(--border-strong);
+
+  /* Text */
+  --color-ink:   var(--text-primary);
+  --color-dim:   var(--text-secondary);
+  --color-ghost: var(--text-muted);
+
+  /* Brand */
+  --color-brand:    var(--brand);
+  --color-brand-on: var(--brand-on);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Leaflet popup theming ─────────────────────────────────────────────────*/
+.leaflet-popup-content-wrapper {
+  background: var(--popup-bg) !important;
+  color: var(--popup-text) !important;
+  border: 1px solid var(--popup-border) !important;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
+.leaflet-popup-tip { background: var(--popup-bg) !important; }
+.leaflet-popup-close-button { color: var(--popup-btn) !important; }
+.leaflet-popup-close-button:hover { color: var(--text-primary) !important; }
+.leaflet-control-attribution {
+  background: var(--bg-overlay) !important;
+  color: var(--text-muted) !important;
+  opacity: 0.85;
+}
+.leaflet-control-attribution a { color: var(--text-secondary) !important; }
+.leaflet-control-zoom a {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-control-zoom a:hover { background: var(--bg-panel) !important; }
 
+/* ─── Body base ─────────────────────────────────────────────────────────────*/
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
 }

@@ -24,11 +24,11 @@ function LanguageToggle() {
   )
 }
 
-function SectionHeader({ eyebrow, title }) {
+function SectionHeader({ eyebrow, title, isEn }) {
   return (
     <div className="text-center mb-10">
-      <p className="text-xs uppercase tracking-[0.3em]" style={{ color: 'var(--brand)' }}>{eyebrow}</p>
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl" style={{ color: 'var(--text-primary)' }}>
+      <p className={`text-xs ${isEn ? 'uppercase tracking-[0.3em]' : ''}`} style={{ color: 'var(--brand)' }}>{eyebrow}</p>
+      <h2 className={`mt-3 text-2xl font-semibold sm:text-3xl ${isEn ? 'tracking-tight' : ''}`} style={{ color: 'var(--text-primary)' }}>
         {title}
       </h2>
     </div>
@@ -83,7 +83,8 @@ function TeamCard({ member }) {
 }
 
 export default function AboutPage() {
-  const { t } = useTranslation(['about', 'common'])
+  const { t, i18n } = useTranslation(['about', 'common'])
+  const isEn = i18n.language === 'en' || i18n.language?.startsWith('en-')
   const role = t('about:team.role')
   const teamWithRole = TEAM.map(m => ({ ...m, affiliation: role }))
 
@@ -105,7 +106,7 @@ export default function AboutPage() {
       <main className="flex-1">
         {/* ── Team ── */}
         <section id="team" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-16">
-          <SectionHeader eyebrow={t('about:team.eyebrow')} title={t('about:team.title')} />
+          <SectionHeader eyebrow={t('about:team.eyebrow')} title={t('about:team.title')} isEn={isEn} />
           <p className="text-center text-sm max-w-lg mx-auto -mt-6 mb-10" style={{ color: 'var(--text-secondary)' }}>
             {t('about:team.desc')}
           </p>
@@ -116,7 +117,7 @@ export default function AboutPage() {
 
         {/* ── How to Use ── */}
         <section id="how-to-use" className="max-w-3xl mx-auto px-4 py-16 scroll-mt-16">
-          <SectionHeader eyebrow={t('about:howToUse.eyebrow')} title={t('about:howToUse.title')} />
+          <SectionHeader eyebrow={t('about:howToUse.eyebrow')} title={t('about:howToUse.title')} isEn={isEn} />
           <ol className="space-y-4">
             {steps.map((step, i) => (
               <li
@@ -141,7 +142,7 @@ export default function AboutPage() {
 
         {/* ── Why Leafline ── */}
         <section id="why-leafline" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-16">
-          <SectionHeader eyebrow={t('about:why.eyebrow')} title={t('about:why.title')} />
+          <SectionHeader eyebrow={t('about:why.eyebrow')} title={t('about:why.title')} isEn={isEn} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {points.map((point, i) => (
               <div
