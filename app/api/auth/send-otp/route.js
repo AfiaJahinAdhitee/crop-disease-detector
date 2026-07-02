@@ -38,14 +38,14 @@ export async function POST(request) {
 
     // Send OTP via Gmail SMTP
     await transporter.sendMail({
-      from: `"CROP-Doctor" <${process.env.GMAIL_USER}>`,
+      from: `"Leafline" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: `${otp} is your CROP-Doctor sign-in code`,
+      subject: `${otp} is your Leafline sign-in code`,
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0a1a0d; border-radius: 16px; border: 1px solid #1a3a1a;">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: #4ade80; text-transform: uppercase; margin-bottom: 24px;">CROP2</div>
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: #4ade80; text-transform: uppercase; margin-bottom: 24px;">Leafline</div>
           <h2 style="color: #f0fdf4; font-size: 22px; font-weight: 600; margin: 0 0 8px;">Your sign-in code</h2>
-          <p style="color: #6b7280; font-size: 14px; margin: 0 0 28px;">Use this code to sign in to your CROP2 account. It expires in 10 minutes.</p>
+          <p style="color: #6b7280; font-size: 14px; margin: 0 0 28px;">Use this code to sign in to your Leafline account. It expires in 10 minutes.</p>
           <div style="background: #0f2a13; border: 1px solid #166534; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px;">
             <span style="font-size: 36px; font-weight: 700; letter-spacing: 0.2em; color: #4ade80; font-family: monospace;">${otp}</span>
           </div>

@@ -69,27 +69,19 @@ export async function POST(request) {
     })
     if (createError) throw new Error(createError.message)
 
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
     const { error: profileError } = await admin
       .from('profiles')
-      .update({
-        full_name: name,
-        phone,
-        email,
-        region,
-      })
-      .eq('id', userData.user.id)
-
-    if (profileError) {
-      console.error('profile update error:', profileError)
-      await admin.from('profiles').insert({
+      .upsert({
         id: userData.user.id,
         full_name: name,
         phone,
         email,
         region,
-      })
+      }, { onConflict: 'id' })
+
+    if (profileError) {
+      console.error('profile upsert error:', profileError)
+      throw new Error('Failed to save profile.')
     }
 
     const anonClient = createClient(

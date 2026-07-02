@@ -1,0 +1,44 @@
+{
+  "team": {
+    "eyebrow": "About Us",
+    "title": "Meet the team behind Leafline",
+    "desc": "Three BUET CSE students building AI-powered crop disease diagnosis for Bangladesh farmers.",
+    "role": "BUET, CSE"
+  },
+  "howToUse": {
+    "eyebrow": "Getting Started",
+    "title": "How to use Leafline",
+    "steps": [
+      { "title": "Sign up with your phone number", "desc": "Quick OTP-based registration — no complicated forms." },
+      { "title": "Choose the affected plant part", "desc": "Leaf, root, fruit, flower, or stem/branch." },
+      { "title": "Upload a clear photo", "desc": "Add your crop type and region for a more accurate result." },
+      { "title": "Get instant AI diagnosis", "desc": "Disease name, severity, and treatment advice in Bangla." },
+      { "title": "Track your history", "desc": "Review past diagnoses and see regional trends on the dashboard." }
+    ]
+  },
+  "why": {
+    "eyebrow": "Why Leafline",
+    "title": "Built for Bangladesh farmers",
+    "points": [
+      { "title": "Bangla-first", "desc": "Every diagnosis, treatment, and prevention tip is written in Bangla." },
+      { "title": "Two-model verification", "desc": "A custom-trained disease model is cross-checked against Gemini AI for higher accuracy." },
+      { "title": "Weather-aware advice", "desc": "Local district weather is factored into every diagnosis." },
+      { "title": "Actionable guidance", "desc": "Not just a diagnosis — concrete treatment and prevention steps." },
+      { "title": "Free and accessible", "desc": "Sign up with just a phone number, no cost to use." }
+    ]
+  },
+  "usefulLinks": {
+    "title": "Useful Links",
+    "moa": "Ministry of Agriculture",
+    "dam": "Dept. of Agricultural Marketing",
+    "dae": "Dept. of Agricultural Extension",
+    "about": "About Us",
+    "howToUse": "How to Use",
+    "why": "Why Leafline"
+  },
+  "footer": {
+    "tagline": "AI-powered crop disease diagnosis for Bangladesh farmers.",
+    "team": "Meet the Team",
+    "rights": "All rights reserved."
+  }
+}

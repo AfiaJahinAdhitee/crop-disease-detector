@@ -3,6 +3,7 @@ CREATE TABLE public.profiles (
   id          UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name   TEXT,
   phone       TEXT,
+  email       TEXT,          -- contact email, used to verify password-reset requests
   region      TEXT,          -- e.g. 'Dhaka', 'Rajshahi'
   created_at  TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -20,6 +21,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Table-level grants (RLS policies below still restrict row access on top of these)
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.profiles TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.profiles TO authenticated;
 
 
   CREATE TABLE public.diagnoses (

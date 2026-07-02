@@ -251,7 +251,7 @@ export default function LoginPage() {
               <path d="M16 10C16 10 11 14 11 19C11 21.8 13.2 24 16 24" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
             </svg>
           </div>
-          <span className="brand-label">CROP2</span>
+          <span className="brand-label">Leafline</span>
         </div>
 
         {/* ── CHOOSE ── */}
