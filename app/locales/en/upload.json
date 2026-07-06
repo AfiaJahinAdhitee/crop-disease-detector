@@ -3,7 +3,8 @@
   "photo": {
     "retake": "Retake",
     "galleryHint": "Take a photo or choose from gallery",
-    "addPhoto": "Add Photo"
+    "addPhoto": "Gallery",
+    "takePhoto": "Take Photo"
   },
   "crop": {
     "sectionLabel": "Select Crop Type",

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import LeaflineLogo from '@/app/components/LeaflineLogo'
 
 function OtpInput({ otp, onChange, onKeyDown }) {
   return (
@@ -244,14 +245,8 @@ export default function LoginPage() {
       <div className="bg-glow" />
 
       <div className="login-card">
-        <div className="brand">
-          <div className="brand-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 3C16 3 8 9 8 18C8 22.4 11.6 26 16 26C20.4 26 24 22.4 24 18C24 9 16 3 16 3Z" fill="currentColor" opacity="0.9"/>
-              <path d="M16 10C16 10 11 14 11 19C11 21.8 13.2 24 16 24" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
-            </svg>
-          </div>
-          <span className="brand-label">Leafline</span>
+        <div className="brand" style={{ '--text-primary': '#f0fdf4' }}>
+          <LeaflineLogo size={28} />
         </div>
 
         {/* ── CHOOSE ── */}
@@ -469,9 +464,7 @@ export default function LoginPage() {
         .bg-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(74,222,128,0.04) 1px,transparent 1px), linear-gradient(90deg,rgba(74,222,128,0.04) 1px,transparent 1px); background-size:40px 40px; }
         .bg-glow { position:absolute; width:600px; height:600px; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(circle,rgba(34,197,94,0.08) 0%,transparent 70%); pointer-events:none; }
         .login-card { position:relative; width:100%; max-width:420px; background:rgba(10,20,13,0.95); border:1px solid rgba(74,222,128,0.15); border-radius:24px; padding:2.5rem; backdrop-filter:blur(20px); box-shadow:0 0 0 1px rgba(0,0,0,0.5),0 24px 60px rgba(0,0,0,0.6),inset 0 1px 0 rgba(74,222,128,0.08); }
-        .brand { display:flex; align-items:center; gap:0.6rem; margin-bottom:2rem; }
-        .brand-icon { width:32px; height:32px; color:#4ade80; }
-        .brand-label { font-size:0.8rem; font-weight:700; letter-spacing:0.2em; color:#4ade80; text-transform:uppercase; }
+        .brand { display:flex; align-items:center; margin-bottom:2rem; }
         .card-header { margin-bottom:2rem; }
         .back-btn { background:none; border:none; color:#6b7280; font-size:0.82rem; cursor:pointer; padding:0; margin-bottom:1rem; transition:color 0.15s; }
         .back-btn:hover { color:#9ca3af; }

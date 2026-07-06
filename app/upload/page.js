@@ -11,16 +11,16 @@ import '@/app/i18n/config'
 import YouTubeSection from '../components/YouTubeSection'
 
 const CROP_CONFIG = [
-  { id: 'Rice',       emoji: '🌾' },
-  { id: 'Potato',     emoji: '🥔' },
-  { id: 'Tomato',     emoji: '🍅' },
-  { id: 'Corn',       emoji: '🌽' },
-  { id: 'Wheat',      emoji: '🌿' },
-  { id: 'Pepper',     emoji: '🌶️' },
-  { id: 'Apple',      emoji: '🍎' },
-  { id: 'Grape',      emoji: '🍇' },
-  { id: 'Strawberry', emoji: '🍓' },
-  { id: 'Other',      emoji: '🌱' },
+  { id: 'Rice',       emoji: '🌾', parts: ['leaf', 'root', 'body'] },
+  { id: 'Potato',     emoji: '🥔', parts: ['leaf', 'root', 'body'] },
+  { id: 'Tomato',     emoji: '🍅', parts: ['leaf', 'root', 'fruit', 'flower', 'body'] },
+  { id: 'Corn',       emoji: '🌽', parts: ['leaf', 'root', 'fruit', 'body'] },
+  { id: 'Wheat',      emoji: '🌿', parts: ['leaf', 'root', 'body'] },
+  { id: 'Pepper',     emoji: '🌶️', parts: ['leaf', 'root', 'fruit', 'flower', 'body'] },
+  { id: 'Apple',      emoji: '🍎', parts: ['leaf', 'fruit', 'flower', 'body'] },
+  { id: 'Grape',      emoji: '🍇', parts: ['leaf', 'fruit', 'flower', 'body'] },
+  { id: 'Strawberry', emoji: '🍓', parts: ['leaf', 'fruit', 'flower', 'body'] },
+  { id: 'Other',      emoji: '🌱', parts: ['leaf', 'root', 'fruit', 'flower', 'body'] },
 ]
 
 const BANGLADESH_DISTRICTS = [
@@ -704,17 +704,28 @@ function UploadPageInner() {
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center gap-4 py-10 cursor-pointer min-h-[220px]">
+            <div className="flex flex-col items-center justify-center gap-4 py-10 min-h-[220px]">
               <CameraIcon color={meta.color} size={64} />
               <div className="text-center">
                 <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{t(`home:parts.${plantPart}.uploadHint`)}</p>
                 <p className="text-sm mt-1.5" style={{ color: 'var(--text-secondary)' }}>{t('upload:photo.galleryHint')}</p>
               </div>
-              <span className="px-4 py-2 rounded-xl font-semibold text-sm" style={{ background: meta.color, color: '#000' }}>
-                {t('upload:photo.addPhoto')}
-              </span>
-              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-            </label>
+              <div className="flex items-center gap-3">
+                <label className="px-4 py-2 rounded-xl font-semibold text-sm cursor-pointer" style={{ background: meta.color, color: '#000' }}>
+                  {t('upload:photo.addPhoto')}
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                </label>
+                <label className="px-4 py-2 rounded-xl font-semibold text-sm cursor-pointer flex items-center gap-2"
+                  style={{ border: `1.5px solid ${meta.color}`, color: meta.color, background: 'transparent' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  {t('upload:photo.takePhoto')}
+                  <input type="file" accept="image/*" capture="environment" onChange={handleImageChange} className="hidden" />
+                </label>
+              </div>
+            </div>
           )}
         </div>
 
@@ -725,7 +736,7 @@ function UploadPageInner() {
             <span style={{ color: 'var(--sev-high-text)' }}>{t('upload:crop.required')}</span>
           </p>
           <div className="grid grid-cols-2 gap-2">
-            {CROP_CONFIG.map((crop) => {
+            {CROP_CONFIG.filter(c => c.parts.includes(plantPart)).map((crop) => {
               const selected = cropType === crop.id
               return (
                 <button key={crop.id} suppressHydrationWarning onClick={() => setCropType(crop.id)}

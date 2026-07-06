@@ -3,7 +3,8 @@
   "photo": {
     "retake": "পুনরায় তুলুন",
     "galleryHint": "ছবি তুলুন বা গ্যালারি থেকে বেছে নিন",
-    "addPhoto": "ছবি যোগ করুন"
+    "addPhoto": "গ্যালারি",
+    "takePhoto": "ছবি তুলুন"
   },
   "crop": {
     "sectionLabel": "ফসলের ধরন বেছে নিন",
