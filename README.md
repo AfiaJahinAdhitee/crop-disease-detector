@@ -4,7 +4,7 @@
 
 Upload a photo of an affected plant part — leaf, root, fruit, flower, or stem — and get an instant diagnosis powered by a custom-trained disease detection model, cross-checked with Google Gemini, complete with severity rating, treatment plan, and prevention advice in Bangla or English.
 
-**🔗 Live app:** [https://crop-disease-detector-vojv.vercel.app/](https://crop-disease-detector-vojv.vercel.app/)
+**🔗 Live app:** [Leafline](https://crop-disease-detector-vert.vercel.app/)
 
 ---
 
