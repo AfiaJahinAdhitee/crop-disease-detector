@@ -95,11 +95,12 @@ function CameraIcon({ color, size = 56 }) {
   )
 }
 
-function TreatmentCard({ treatment, t }) {
+function TreatmentCard({ treatment, t, lang }) {
   const [tab, setTab] = useState('organic')
   const [fieldSize, setFieldSize] = useState('')
   const [fieldUnit, setFieldUnit] = useState('bigha')
   const BIGHA_PER_ACRE = 3.025
+  const isEn = lang === 'en'
 
   function toBigha(value, unit) {
     const n = parseFloat(value)
@@ -135,7 +136,7 @@ function TreatmentCard({ treatment, t }) {
           <div>
             <p className="text-base font-bold leading-tight" style={{ color: 'var(--sev-none-text)' }}>{t('upload:treatment.header')}</p>
             <p className="text-xs font-medium" style={{ color: 'var(--sev-none-text)', opacity: 0.7 }}>
-              {t('upload:treatment.subtitle')} — {treatment.disease_name_en}
+              {t('upload:treatment.subtitle')} — {isEn ? treatment.disease_name_en : treatment.disease_name_bn}
             </p>
           </div>
         </div>
@@ -151,19 +152,19 @@ function TreatmentCard({ treatment, t }) {
                 {t('upload:treatment.yieldLoss', { range: treatment.yield_loss_if_untreated.percent_range })}
               </p>
               <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--sev-high-text)', opacity: 0.75 }}>
-                {treatment.yield_loss_if_untreated.description_bn}
+                {isEn ? treatment.yield_loss_if_untreated.description_en : treatment.yield_loss_if_untreated.description_bn}
               </p>
             </div>
           </div>
         )}
 
-        {treatment.application_timing_bn && (
+        {(isEn ? treatment.application_timing_en : treatment.application_timing_bn) && (
           <div className="flex items-start gap-3 rounded-xl px-4 py-3"
             style={{ background: 'var(--sev-low-bg)', border: '1px solid var(--sev-low-border)' }}>
             <span className="text-base flex-shrink-0">🕐</span>
             <div>
               <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--sev-low-text)' }}>{t('upload:treatment.timing')}</p>
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--sev-low-text)', opacity: 0.8 }}>{treatment.application_timing_bn}</p>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--sev-low-text)', opacity: 0.8 }}>{isEn ? treatment.application_timing_en : treatment.application_timing_bn}</p>
             </div>
           </div>
         )}
@@ -224,12 +225,12 @@ function TreatmentCard({ treatment, t }) {
                 <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                   style={{ background: accentHex, color: '#fff' }}>{i + 1}</div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold truncate" style={{ color: 'var(--text-primary)' }}>{opt.name_bn || opt.name_en}</p>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{opt.name_en}</p>
+                  <p className="text-sm font-bold truncate" style={{ color: 'var(--text-primary)' }}>{isEn ? (opt.name_en || opt.name_bn) : (opt.name_bn || opt.name_en)}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{isEn ? opt.name_bn : opt.name_en}</p>
                 </div>
               </div>
               <div className="px-4 py-3 space-y-3">
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{opt.description_bn}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{isEn ? opt.description_en : opt.description_bn}</p>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="rounded-lg px-3 py-2.5" style={{ background: 'var(--bg-card)' }}>
                     <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>{t('upload:treatment.dosageLabel')}</p>
@@ -242,7 +243,7 @@ function TreatmentCard({ treatment, t }) {
                 </div>
                 <div className="rounded-lg px-3 py-2.5 text-xs leading-relaxed" style={{ background: 'var(--bg-card)', color: 'var(--text-secondary)' }}>
                   <span className="font-semibold" style={{ color: 'var(--text-muted)' }}>{t('upload:treatment.methodLabel')}</span>
-                  {opt.application_method_bn}
+                  {isEn ? opt.application_method_en : opt.application_method_bn}
                 </div>
               </div>
             </div>
@@ -911,7 +912,7 @@ function UploadPageInner() {
               </span>
               <div className="flex-1 h-px" style={{ background: 'var(--sev-none-border)' }} />
             </div>
-            <TreatmentCard treatment={treatmentData} t={t} />
+            <TreatmentCard treatment={treatmentData} t={t} lang={lang} />
           </>
         )}
 
