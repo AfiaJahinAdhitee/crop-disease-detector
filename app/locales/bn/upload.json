@@ -21,8 +21,6 @@
     "expand": "+ চাপুন"
   },
   "region": {
-    "sectionLabel": "এলাকা / জেলার নাম",
-    "required": "*",
     "label": "এলাকা / জেলার নাম",
     "placeholder": "জেলার নাম টাইপ করুন..."
   },

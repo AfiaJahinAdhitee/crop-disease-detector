@@ -29,9 +29,9 @@ export async function POST(request) {
     const userDescription = formData.get('userDescription') || ''
     const plantPart = formData.get('plantPart') || 'leaf'
 
-    if (!imageFile || !cropType || !region?.trim()) {
+    if (!imageFile || !cropType) {
       return Response.json(
-        { success: false, error: 'Image, crop type, and region are required.' },
+        { success: false, error: 'Image and crop type are required.' },
         { status: 400 }
       )
     }
@@ -48,14 +48,20 @@ export async function POST(request) {
 
     // Fetch weather for the district (non-blocking — if it fails, we proceed without it)
     const weather = await getDistrictWeather(region)
+    if (weather) {
+      console.log(`🌤️ Weather for ${weather.district}: ${weather.temperature}°C, ${weather.humidity}% humidity, ${weather.description}`)
+    }
 
     // Only use custom model for LEAVES — it is not trained for other parts
     if (SUPPORTED_CROPS.includes(cropType.toLowerCase()) && plantPart === 'leaf') {
+      console.log("🧠 Using CUSTOM MODEL for:", cropType)
       const modelResult = await runCustomModel(imageFile, cropType)
+      console.log("🧠 Custom model result:", modelResult)
 
       const diseaseMatchesCrop = modelResult.disease.toLowerCase().includes(cropType.toLowerCase())
 
       if (!diseaseMatchesCrop) {
+        console.log(`⚠️ Model returned "${modelResult.disease}" for crop "${cropType}" — falling back to Gemini`)
         diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
         diagnosis.source = "gemini_fallback"
       } else {
@@ -69,38 +75,43 @@ export async function POST(request) {
         )
         diagnosis.source = "custom_model"
 
-        // Cross-check with Gemini — best-effort only. If this fails (e.g. rate
-        // limit), the primary diagnosis above must still go through untouched.
-        try {
-          const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
+        // Cross-check with Gemini
+        console.log("🔍 Cross-checking with Gemini...")
+        const geminiResult = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
 
-          const modelDisease = modelResult.disease.toLowerCase().replace(/_+/g, ' ')
-          const geminiDisease = geminiResult.disease_name?.toLowerCase() || ''
-          const modelIsHealthy = modelDisease.includes('healthy')
-          const geminiIsHealthy = !geminiResult.disease_detected
+        const modelDisease = modelResult.disease.toLowerCase().replace(/_+/g, ' ')
+        const geminiDisease = geminiResult.disease_name?.toLowerCase() || ''
+        const modelIsHealthy = modelDisease.includes('healthy')
+        const geminiIsHealthy = !geminiResult.disease_detected
 
-          const bothAgreeOnHealth = modelIsHealthy === geminiIsHealthy
+        const bothAgreeOnHealth = modelIsHealthy === geminiIsHealthy
 
-          const modelKeywords = modelDisease
-            .replace(cropType.toLowerCase(), '')
-            .replace(/_+/g, ' ')
-            .trim()
-            .split(' ')
-            .filter(w => w.length > 3)
+        const modelKeywords = modelDisease
+          .replace(cropType.toLowerCase(), '')
+          .replace(/_+/g, ' ')
+          .trim()
+          .split(' ')
+          .filter(w => w.length > 3)
 
-          const diseaseNamesMatch = modelKeywords.some(word => geminiDisease.includes(word))
-          const geminiAgrees = bothAgreeOnHealth && (modelIsHealthy || diseaseNamesMatch)
+        const diseaseNamesMatch = modelKeywords.some(word => geminiDisease.includes(word))
+        const geminiAgrees = bothAgreeOnHealth && (modelIsHealthy || diseaseNamesMatch)
 
-          if (!geminiAgrees) {
-            geminiResult.source = "gemini"
-            secondOpinion = geminiResult
-          }
-        } catch (crossCheckError) {
-          console.warn('⚠️ Gemini cross-check failed, proceeding with custom model result only:', crossCheckError.message)
+        console.log(`🔍 Model healthy: ${modelIsHealthy} | Gemini healthy: ${geminiIsHealthy}`)
+        console.log(`🔍 Both agree on health: ${bothAgreeOnHealth}`)
+        console.log(`🔍 Disease names match: ${diseaseNamesMatch}`)
+        console.log(`🔍 Gemini agrees: ${geminiAgrees}`)
+
+        if (!geminiAgrees) {
+          console.log(`⚠️ Gemini disagrees! Model: "${modelResult.disease}" | Gemini: "${geminiResult.disease_name}"`)
+          geminiResult.source = "gemini"
+          secondOpinion = geminiResult
+        } else {
+          console.log(`✅ Gemini agrees with custom model!`)
         }
       }
 
     } else {
+      console.log(`✨ Using GEMINI for: ${cropType} (part: ${plantPart})`)
       diagnosis = await analyzeCropImage(base64Image, 'image/jpeg', cropType, userDescription, plantPart, weather)
       diagnosis.source = "gemini"
     }
@@ -150,6 +161,8 @@ export async function POST(request) {
 
       if (insertError) {
         console.error('❌ Supabase insert error:', insertError.message)
+      } else {
+        console.log('✅ Diagnosis saved:', diagnosisId)
       }
     }
 

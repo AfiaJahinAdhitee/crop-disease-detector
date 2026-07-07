@@ -21,8 +21,6 @@
     "expand": "+ Tap to expand"
   },
   "region": {
-    "sectionLabel": "Area / District Name",
-    "required": "*",
     "label": "Area / District Name",
     "placeholder": "Type district name..."
   },

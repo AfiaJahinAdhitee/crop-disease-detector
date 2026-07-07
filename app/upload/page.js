@@ -768,11 +768,11 @@ function UploadPageInner() {
         </div>
 
         {/* Region */}
-        <div className="space-y-3">
-          <p className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
-            <span>{t('upload:region.sectionLabel')}</span>
-            <span style={{ color: 'var(--sev-high-text)' }}>{t('upload:region.required')}</span>
-          </p>
+        <div className="space-y-2">
+          <label className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+            <span>{t('upload:region.label')}</span>
+            <span style={{ color: 'var(--sev-high-text)' }}>{t('upload:crop.required')}</span>
+          </label>
           <div className="relative">
             <div ref={regionBorderRef} className="relative rounded-xl overflow-visible transition-colors"
               style={{ border: isRegionListening ? '1px solid #ef4444' : '1px solid var(--border)', background: 'var(--bg-card)' }}>
