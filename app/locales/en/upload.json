@@ -16,11 +16,13 @@
     }
   },
   "optional": {
-    "title": "Add Location & Notes",
+    "title": "Add Notes",
     "badge": "(optional)",
     "expand": "+ Tap to expand"
   },
   "region": {
+    "sectionLabel": "Area / District Name",
+    "required": "*",
     "label": "Area / District Name",
     "placeholder": "Type district name..."
   },

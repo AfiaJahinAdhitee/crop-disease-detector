@@ -767,6 +767,52 @@ function UploadPageInner() {
           </div>
         </div>
 
+        {/* Region */}
+        <div className="space-y-3">
+          <p className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+            <span>{t('upload:region.sectionLabel')}</span>
+            <span style={{ color: 'var(--sev-high-text)' }}>{t('upload:region.required')}</span>
+          </p>
+          <div className="relative">
+            <div ref={regionBorderRef} className="relative rounded-xl overflow-visible transition-colors"
+              style={{ border: isRegionListening ? '1px solid #ef4444' : '1px solid var(--border)', background: 'var(--bg-card)' }}>
+              <input type="text" suppressHydrationWarning
+                placeholder={t('upload:region.placeholder')}
+                value={region}
+                onChange={e => setRegion(e.target.value)}
+                className="w-full bg-transparent border-none px-4 py-3 pr-12 text-sm focus:outline-none"
+                style={{ color: 'var(--text-primary)' }}
+                onFocus={() => { if (regionBorderRef.current) regionBorderRef.current.style.borderColor = meta.color }}
+                onBlur={() => {
+                  if (regionBorderRef.current) regionBorderRef.current.style.borderColor = ''
+                  setTimeout(() => setRegionSuggestions([]), 150)
+                }}
+                autoComplete="off"
+              />
+              <button type="button" suppressHydrationWarning
+                onClick={() => isRegionListening ? stopRegionRecognition() : startRegionRecognition()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-colors"
+                style={isRegionListening
+                  ? { background: 'rgba(239,68,68,0.2)', color: '#ef4444' }
+                  : { background: 'var(--bg-panel)', color: 'var(--text-muted)' }}>
+                {isRegionListening ? <Square size={16} fill="currentColor" /> : <Mic size={16} />}
+              </button>
+            </div>
+            {regionSuggestions.length > 0 && (
+              <ul className="absolute z-10 w-full mt-1 rounded-xl overflow-hidden shadow-lg"
+                style={{ background: 'var(--bg-overlay)', border: '1px solid var(--border)' }}>
+                {regionSuggestions.map(d => (
+                  <li key={d} onMouseDown={() => { setRegion(d); setRegionSuggestions([]) }}
+                    className="px-4 py-3 text-sm cursor-pointer transition-colors"
+                    style={{ color: 'var(--text-primary)' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
+                    onMouseLeave={e => e.currentTarget.style.background = ''}>{d}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
         {/* Optional details */}
         <details className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
           <summary className="px-5 py-4 cursor-pointer flex items-center justify-between text-sm font-medium select-none list-none [&::-webkit-details-marker]:hidden transition-colors"
@@ -782,49 +828,6 @@ function UploadPageInner() {
           </summary>
 
           <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-panel)' }}>
-            {/* Region */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{t('upload:region.label')}</label>
-              <div className="relative">
-                <div ref={regionBorderRef} className="relative rounded-xl overflow-visible transition-colors"
-                  style={{ border: isRegionListening ? '1px solid #ef4444' : '1px solid var(--border)', background: 'var(--bg-card)' }}>
-                  <input type="text" suppressHydrationWarning
-                    placeholder={t('upload:region.placeholder')}
-                    value={region}
-                    onChange={e => setRegion(e.target.value)}
-                    className="w-full bg-transparent border-none px-4 py-3 pr-12 text-sm focus:outline-none"
-                    style={{ color: 'var(--text-primary)' }}
-                    onFocus={() => { if (regionBorderRef.current) regionBorderRef.current.style.borderColor = meta.color }}
-                    onBlur={() => {
-                      if (regionBorderRef.current) regionBorderRef.current.style.borderColor = ''
-                      setTimeout(() => setRegionSuggestions([]), 150)
-                    }}
-                    autoComplete="off"
-                  />
-                  <button type="button" suppressHydrationWarning
-                    onClick={() => isRegionListening ? stopRegionRecognition() : startRegionRecognition()}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-colors"
-                    style={isRegionListening
-                      ? { background: 'rgba(239,68,68,0.2)', color: '#ef4444' }
-                      : { background: 'var(--bg-panel)', color: 'var(--text-muted)' }}>
-                    {isRegionListening ? <Square size={16} fill="currentColor" /> : <Mic size={16} />}
-                  </button>
-                </div>
-                {regionSuggestions.length > 0 && (
-                  <ul className="absolute z-10 w-full mt-1 rounded-xl overflow-hidden shadow-lg"
-                    style={{ background: 'var(--bg-overlay)', border: '1px solid var(--border)' }}>
-                    {regionSuggestions.map(d => (
-                      <li key={d} onMouseDown={() => { setRegion(d); setRegionSuggestions([]) }}
-                        className="px-4 py-3 text-sm cursor-pointer transition-colors"
-                        style={{ color: 'var(--text-primary)' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
-                        onMouseLeave={e => e.currentTarget.style.background = ''}>{d}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-
             {/* Description */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
