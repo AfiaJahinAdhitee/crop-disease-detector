@@ -20,6 +20,20 @@ function OtpInput({ otp, onChange, onKeyDown }) {
           onKeyDown={e => onKeyDown(i, e)}
           autoFocus={i === 0}
           autoComplete="one-time-code"
+          style={{
+            background: digit ? 'rgba(134,239,172,0.28)' : 'rgba(187,247,208,0.18)',
+            border: digit ? '1.5px solid rgba(74,222,128,0.75)' : '1.5px solid rgba(134,239,172,0.5)',
+          }}
+          onFocus={e => {
+            e.target.style.background = 'rgba(187,247,208,0.32)'
+            e.target.style.border = '1.5px solid rgba(74,222,128,0.95)'
+            e.target.style.boxShadow = '0 0 0 3px rgba(74,222,128,0.22)'
+          }}
+          onBlur={e => {
+            e.target.style.background = e.target.value ? 'rgba(134,239,172,0.28)' : 'rgba(187,247,208,0.18)'
+            e.target.style.border = e.target.value ? '1.5px solid rgba(74,222,128,0.75)' : '1.5px solid rgba(134,239,172,0.5)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       ))}
     </div>
@@ -486,9 +500,9 @@ export default function LoginPage() {
         .pw-toggle:hover { color:#9ca3af; }
         .pw-toggle svg { width:100%; height:100%; }
         .otp-wrap { display:flex; gap:0.5rem; justify-content:center; }
-        .otp-box { width:48px; height:56px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; font-size:1.4rem; font-weight:600; color:#f0fdf4; text-align:center; outline:none; transition:border-color 0.15s,box-shadow 0.15s,background 0.15s; caret-color:#4ade80; }
-        .otp-box:focus { border-color:rgba(74,222,128,0.6); box-shadow:0 0 0 3px rgba(74,222,128,0.1); background:rgba(74,222,128,0.05); }
-        .otp-filled { border-color:rgba(74,222,128,0.4); background:rgba(74,222,128,0.06); }
+        .otp-box { width:48px; height:56px; background:rgba(220,252,231,0.12); border:1px solid rgba(134,239,172,0.35); border-radius:10px; font-size:1.4rem; font-weight:600; color:#f0fdf4; text-align:center; outline:none; transition:border-color 0.15s,box-shadow 0.15s,background 0.15s; caret-color:#4ade80; }
+        .otp-box:focus { border-color:rgba(74,222,128,0.8); box-shadow:0 0 0 3px rgba(74,222,128,0.18); background:rgba(220,252,231,0.22); }
+        .otp-filled { border-color:rgba(74,222,128,0.6); background:rgba(220,252,231,0.18); }
         .error-msg { font-size:0.82rem; color:#f87171; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.6rem 0.875rem; margin:0; }
         .btn-primary { background:#16a34a; color:#fff; border:none; border-radius:10px; padding:0.8rem 1.25rem; font-size:0.95rem; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.1s,opacity 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.1); }
         .btn-primary:hover:not(:disabled) { background:#15803d; }
