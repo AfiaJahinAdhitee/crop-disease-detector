@@ -499,8 +499,8 @@ export default function LoginPage() {
         .pw-toggle { position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; color:#6b7280; cursor:pointer; width:20px; height:20px; padding:0; transition:color 0.15s; }
         .pw-toggle:hover { color:#9ca3af; }
         .pw-toggle svg { width:100%; height:100%; }
-        .otp-wrap { display:flex; gap:0.5rem; justify-content:center; }
-        .otp-box { width:48px; height:56px; background:rgba(220,252,231,0.12); border:1px solid rgba(134,239,172,0.35); border-radius:10px; font-size:1.4rem; font-weight:600; color:#f0fdf4; text-align:center; outline:none; transition:border-color 0.15s,box-shadow 0.15s,background 0.15s; caret-color:#4ade80; }
+        .otp-wrap { display:flex !important; flex-direction:row !important; gap:0.5rem; justify-content:center; align-items:center; max-width:100%; }
+        .otp-box { display:inline-block !important; width:40px !important; min-width:40px !important; max-width:40px !important; height:64px !important; flex:0 0 40px !important; background:rgba(220,252,231,0.12); border:1px solid rgba(134,239,172,0.35); border-radius:10px; font-size:1.4rem; font-weight:600; color:#f0fdf4; text-align:center; outline:none; transition:border-color 0.15s,box-shadow 0.15s,background 0.15s; caret-color:#4ade80; box-sizing:border-box !important; }
         .otp-box:focus { border-color:rgba(74,222,128,0.8); box-shadow:0 0 0 3px rgba(74,222,128,0.18); background:rgba(220,252,231,0.22); }
         .otp-filled { border-color:rgba(74,222,128,0.6); background:rgba(220,252,231,0.18); }
         .error-msg { font-size:0.82rem; color:#f87171; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.6rem 0.875rem; margin:0; }

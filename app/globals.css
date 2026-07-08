@@ -226,3 +226,24 @@ body {
   background: var(--bg-page);
   color: var(--text-primary);
 }
+
+/* ─── OTP input boxes — override Tailwind preflight (display:block / width:100%) ── */
+.otp-wrap {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+.otp-box {
+  display: inline-block !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 64px !important;
+  flex: 0 0 40px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  line-height: 64px !important;
+  padding: 0 !important;
+}
